@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3table</title>
+    <link rel="stylesheet" href="styles.css">
+    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+    <script async type="importmap">
+      {
+        "imports": {
+          "three": "./lib/three.module.js",
+          "orbitControls": "./lib/OrbitControls.js",
+          "STLLoader": "./lib/STLLoader.js",
+          "STLExporter": "./lib/STLExporter.js",
+          "parts": "./parts.js",
+          "model": "./model.js",
+          "gui": "./gui.js",
+          "app": "./app.js"
+        }
+      }
+    </script>    
+    <script async type="text/javascript" src="./lib/dat.gui.min.js"></script>
+    <script async type="module" src="./app.js"></script>
+    <script async type="module" src="./gui.js"></script>
+  </head>
+  <body>
+    <div class="loader">
+      Loading...
+    </div>
+    <div class="ta-container">
+      <div class="ta-buttons">
+        <button id="helpButton">Help</button>
+        <select name="models" id="model-select">
+          <option value="cube.csv">Cube</option>
+          <option value="cubes.csv">Cubes</option>
+          <option value="rounded.csv">Rounded cube</option>
+          <option value="profile_cube.csv">Profile Cube</option>          
+          <option value="rig.csv">Sim Rig</option>
+        </select>
+        <button id="importButton">Import</button>
+        <input type="file" id="input-file" accept=".csv" hidden>
+        <button id="expButton">Export</button>  
+        <button id="listButton">BOM</button>
+        <button id="csvButton">CSV</button>
+      </div>
+      <table class="spec-table">
+        <thead>
+          <tr class="top-thead">
+            <th></th>
+            <th></th>
+            <th colspan="3">Scale</th>
+            <th colspan="3">Position</th>
+            <th colspan="3">Rotation</th>
+          </tr>
+          <tr class="bottom-thead">
+            <th>Part</th>
+            <th>Parent</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>Z</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>Z</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>Z</th>
+          </tr>
+        </thead>
+        <tbody class="spec-table-body"></tbody>
+      </table>
+      <input class="val-slider" type="range" value="0" min="-1000" max="1000"/>
+      <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
+    </div>
+       
+    <dialog id="helpDialog">
+      <h3>How to design your 3D model</h3>
+      <p>
+        Change the comma separated values in the text area.<br/>
+        Each row represents a part as follows:
+      </p>
+      <p>Part, Parent, x, y, z (scale), x, y, z (position), x, y, z (angle)</p>
+      <p>Currently available parts are:
+        <ul id="partsUl">Loading...</ul>
+      </p>
+      <p>
+        Parents are an assembly of parts that can also be used as a part.<br/>
+        Every part must have a parent assembly. The top level or default assembly can be called anything e.g. "model".<br/>
+      </p> 
+      <p>Use a '#' at the start of the line to hide a part.</p>    
+      <p>3Table is particularly suited to aluminium profile construction design so some profile parts have been included.</p>
+      <p>Extruded parts are set to 1mm depth by default. Scale the z axis to get the desired length.</p>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+  
+    <dialog id="plDialog">
+      <h3>Bill Of Material</h3>
+      <p id="plText"></p>
+      <form method="dialog">
+        <button>Close</button>
+        <button class="green" onclick="dlParts()">Save</button>
+      </form>
+    </dialog>
+
+    <dialog id="exportDialog">
+      <h3>Export</h3>
+      <div class="vButtons">
+        <button class="green" onclick="dlCSV()">CSV File</button>
+        <button class="green" onclick="dlParts()">BOM</button>
+        <button class="green" onclick="dlSTL()">3D Model (STL)</button>
+      </div>
+      <form method="dialog">
+        <button>Close</button>
+      </form>
+    </dialog>
+  
+    <div id="guiContainer"></div>
+  </body>
+</html>
