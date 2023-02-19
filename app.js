@@ -25,10 +25,35 @@ tableBodyEl.oninput = (e) => {
 
 let selectedTD = null;
 tableBodyEl.onclick = (e) => {  
-  if(selectedTD)
-    selectedTD.style.background = 'white';
-  selectedTD = e.target;  
+  if(!selectedTD)
+    selectTD(e.target);
+  else {
+    if(e.target.isSelected) // Same TD
+      selectedTD.contentEditable = true;
+    else {
+      unselectTD();
+      selectTD(e.target);
+    }
+  }
+  e.stopPropagation();
+}
+
+function unselectTD() {
+  console.log(0)
+  selectedTD.isSelected = false;
+  selectedTD.contentEditable = false;
+  selectedTD.style.background = selectedTD.originalColor;
+  selectedTD.style.outline = 'none';
+  selectedTD = null;
+}
+
+function selectTD(el) {
+  console.log(1)
+  selectedTD = el;
+  selectedTD.isSelected = true;
+  selectedTD.originalColor = selectedTD.style.background;
   selectedTD.style.background = 'yellow';
+  selectedTD.style.outline = '5px solid red';
   valSliderEl.value = selectedTD.textContent.trim();
   if(selectedTD.attributes['data-address']) {
     const row = JSON.parse(selectedTD.attributes['data-address'].value)[0];
@@ -128,7 +153,6 @@ document.getElementById('importButton').addEventListener('click', (e) => {
 }, false);
 
 document.getElementById('csvButton').addEventListener('click', (e) => { 
-  console.log(taEl.style.display)
   if(taEl.style.display === 'block')
     taEl.style.display = 'none';
   else
@@ -170,7 +194,7 @@ function updateTable(specStr) {
   spec.forEach((row, i) => {
     tableStr += '<tr>\n';
     row.forEach((item, j) => {
-      tableStr += `<td contenteditable="true" data-address="[${i},${j}]">${item.trim()}</td>\n`;
+      tableStr += `<td data-address="[${i},${j}]">${item.trim()}</td>\n`;
     });
     tableStr += '</tr>\n'
   });  
