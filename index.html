@@ -32,7 +32,7 @@
     </div>
     <div class="ta-container">
       <div class="ta-buttons">
-        <button id="helpButton">Help</button>
+        <button id="helpButton">?</button>
         <select name="models" id="model-select">
           <option value="cube.csv">Cube</option>
           <option value="cubes.csv">Cubes</option>
@@ -40,9 +40,7 @@
           <option value="profile_cube.csv">Profile Cube</option>          
           <option value="rig.csv">Sim Rig</option>
         </select>
-        <button id="importButton">Import</button>
-        <input type="file" id="input-file" accept=".csv" hidden>
-        <button id="expButton">Export</button>  
+        <button id="expButton">File</button>  
         <button id="listButton">BOM</button>
         <button id="csvButton">CSV</button>
       </div>
@@ -119,13 +117,18 @@
     </dialog>
 
     <dialog id="exportDialog">
+      <h3>Import</h3>
+      <div class="vButtons">
+        <button class="green" id="importButton">CSV File</button>
+        <input type="file" id="input-file" accept=".csv" hidden>
+      </div>
       <h3>Export</h3>
       <div class="vButtons">
         <button class="green" onclick="dlCSV()">CSV File</button>
-        <button class="green" onclick="dlParts()">BOM</button>
+        <button class="green" onclick="dlParts()">BOM (txt)</button>
         <button class="green" onclick="dlSTL()">3D Model (STL)</button>
       </div>
-      <form method="dialog">
+      <form class="close" method="dialog">
         <button>Close</button>
       </form>
     </dialog>

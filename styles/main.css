@@ -25,10 +25,8 @@ dialog {
   padding-top: 0px;
 }
 textarea {
-  resize: both;
-  max-width: 90vw;
-  overflow-x: auto;
-  min-width: 300px
+  resize: none;
+  overflow: auto;
 }
 h3 {
   font-size: 16px;
@@ -82,7 +80,9 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-bottom: 24px;
+}
+.close {
+  padding-top: 24px;
 }
 #guiContainer{
   position: absolute;
