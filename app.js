@@ -43,9 +43,9 @@ valSliderEl.oninput = e => {
   taEl.value = tableAsCSV(tableBodyEl);
   model.setSpec(taEl.value);
   if(selectedTD.attributes['data-address']) {
-    const row = JSON.parse(selectedTD.attributes['data-address'].value)[0];
-    if(Number.isInteger(row))
-      model.highlightRow(row);
+    const row = JSON.parse(selectedTD.attributes['data-address'].value);
+    if(Number.isInteger(row[0]))
+      model.highlightRow(row[0]);
   }
 };
 
