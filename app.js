@@ -39,7 +39,6 @@ tableBodyEl.onclick = (e) => {
 }
 
 function unselectTD() {
-  console.log(0)
   selectedTD.isSelected = false;
   selectedTD.contentEditable = false;
   selectedTD.style.background = selectedTD.originalColor;
@@ -48,7 +47,6 @@ function unselectTD() {
 }
 
 function selectTD(el) {
-  console.log(1)
   selectedTD = el;
   selectedTD.isSelected = true;
   selectedTD.originalColor = selectedTD.style.background;
@@ -162,14 +160,15 @@ document.getElementById('csvButton').addEventListener('click', (e) => {
 function getFile(event) {
 	const input = event.target;
   if ('files' in input && input.files.length > 0) {
-	  placeFileContent(taEl, input.files[0]);
+    placeFileContent(taEl, input.files[0]);
   }
 }
 
 function placeFileContent(target, file) {
 	readFileContent(file).then(content => {
   	target.value = content;
-    model.setSpec(content);
+    updateTable(content);
+	  model.setSpec(content);
   }).catch(error => console.log(error));
 }
 
@@ -188,7 +187,10 @@ function updateTable(specStr) {
     return;
   let tableStr = '';
   specStr.split('\n').forEach(l => {
-    spec.push(l.split(','));
+    if(l.trim().length > 0) {
+      if(l.split(',').length > 10)
+        spec.push(l.split(','));
+    }
   });
   
   spec.forEach((row, i) => {
@@ -198,6 +200,13 @@ function updateTable(specStr) {
     });
     tableStr += '</tr>\n'
   });  
+  
+  tableStr += '<tr>\n';
+  for(let i = 0; i < 11; i++) {
+    tableStr += `<td data-address="[${spec.length},${i}]"></td>\n`;
+  }
+  tableStr += '</tr>\n'
+  
   tableBodyEl.innerHTML = tableStr;
 }
 
