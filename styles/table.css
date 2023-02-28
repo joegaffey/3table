@@ -6,7 +6,7 @@ thead {
   margin: 0;
   position: sticky;
   top: 0;
-  background-color: #666666;
+  background-color: #444444;
   color: white;
   width: 100%;
 }
@@ -16,9 +16,7 @@ tbody {
 th, td {
   font-size: 12px;
   padding: 0.5em;
-  width: 10%;
-  max-width: 10%;
-  min-width: 10%;
+  width: 8%;
   overflow: hidden;
 }
 th {
@@ -52,13 +50,13 @@ tr:hover td {
 .spec-table > tbody td {
    border: 1px solid #000000;
 }
+
 .top-thead th {
-  border-right: 1px solid #000000;
-  border-left: 1px solid #000000;
+  font-size: 10px;
 }
 .bottom-thead th {
+  font-size: 10px;
   color: #000000;
-  border: 1px solid #000000;
 }
 .bottom-thead th:nth-child(1) {
   border-top: 0;
@@ -134,4 +132,11 @@ tr:hover td {
 }
 .spec-table > tbody td:nth-child(11) {
   background-color: #dadaff;
+}
+.spec-table > tbody td:nth-child(12) {
+  background-color: #444444;
+  padding: 0;
+  margin: auto;
+  text-align: center;
+  border: none;
 }

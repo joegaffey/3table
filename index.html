@@ -27,12 +27,15 @@
     <script async type="module" src="./gui.js"></script>
   </head>
   <body>
+    <div class="warning">
+      WARNING: EARLY ALPHA!
+    </div>
     <div class="loader">
       Loading...
     </div>
     <div class="ta-container">
       <div class="ta-buttons">
-        <button id="helpButton">?</button>
+        <button id="helpButton" class="ui-btn">?</button>
         <select name="models" id="model-select">
           <option value="cube.csv">Cube</option>
           <option value="cubes.csv">Cubes</option>
@@ -40,9 +43,9 @@
           <option value="profile_cube.csv">Profile Cube</option>          
           <option value="rig.csv">Sim Rig</option>
         </select>
-        <button id="expButton">File</button>  
-        <button id="listButton">BOM</button>
-        <button id="csvButton">CSV</button>
+        <button id="expButton" class="ui-btn">File</button>  
+        <button id="listButton" class="ui-btn">BOM</button>
+        <button id="csvButton" class="ui-btn">CSV</button>
       </div>
       <table class="spec-table">
         <thead>
@@ -52,6 +55,7 @@
             <th colspan="3">Scale</th>
             <th colspan="3">Position</th>
             <th colspan="3">Rotation</th>
+            <th></th>
           </tr>
           <tr class="bottom-thead">
             <th>Part</th>
@@ -65,6 +69,7 @@
             <th>X</th>
             <th>Y</th>
             <th>Z</th>
+            <th></th>
           </tr>
         </thead>
         <tbody class="spec-table-body">
@@ -80,10 +85,11 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
-      <input class="val-slider" type="range" value="0" min="-1000" max="1000"/>
+      <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
       <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
     </div>
        
@@ -99,7 +105,7 @@
         Every part must have a parent assembly. The top level or default assembly can be called anything e.g. "model".<br/>
       </p> 
       <p>3Table is particularly suited to aluminium profile construction design so some profile parts have been included.</p>
-      <p>Extruded parts are set to 1mm depth by default. Scale the z axis to get the desired length.</p>
+      <p>Extruded parts are set to 100mm depth by default. Scale the z axis to get the desired length.</p>
       <p>The model can be edited in the table by clicking the cell or by changing the CSV (Comma Separated Values) text.</p>
       <p>If editing the CSV text use a '#' at the start of the line to hide a part.</p>  
       <form method="dialog">

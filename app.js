@@ -24,7 +24,12 @@ tableBodyEl.oninput = (e) => {
 }
 
 let selectedTD = null;
-tableBodyEl.onclick = (e) => {  
+tableBodyEl.onclick = (e) => {
+  console.log(e.target)
+  if(e.target.nodeName !== 'TD')
+    return;
+  if(e.target.getAttribute('isButton'))
+    return;
   if(!selectedTD)
     selectTD(e.target);
   else {
@@ -44,6 +49,7 @@ function unselectTD() {
   selectedTD.style.background = selectedTD.originalColor;
   selectedTD.style.outline = 'none';
   selectedTD = null;
+  valSliderEl.disabled = true;
 }
 
 function selectTD(el) {
@@ -55,8 +61,33 @@ function selectTD(el) {
   valSliderEl.value = selectedTD.textContent.trim();
   if(selectedTD.attributes['data-address']) {
     const row = JSON.parse(selectedTD.attributes['data-address'].value)[0];
-    if(Number.isInteger(row))
+    if(Number.isInteger(row)) {
       model.highlightRow(row);
+    }
+    if(isNaN(selectedTD.innerText))
+      valSliderEl.disabled = true;
+    else {
+      valSliderEl.disabled = false;
+      setSliderRange(JSON.parse(selectedTD.attributes['data-address'].value)[1]);
+    }
+  }
+}
+
+function setSliderRange(col) {
+  if(col < 5) {
+    valSliderEl.max = model.size / 100;
+    valSliderEl.min = 0;
+    valSliderEl.step = 0.01;
+  }
+  else if(col < 8) {
+    valSliderEl.max = model.size / 2;
+    valSliderEl.min = model.size / -2;
+    valSliderEl.step = 1;
+  }
+  else {
+    valSliderEl.max = 180;
+    valSliderEl.min = -180;
+    valSliderEl.step = 1;
   }
 }
 
@@ -76,9 +107,11 @@ function tableAsCSV(tableEl){
   let csv = '';
   Array.from(tableEl.children).forEach(tr => {
     Array.from(tr.children).forEach((td, i) => {
-      if(i > 0)
-        csv += ',';
-      csv += ' ' + td.innerText;
+      if(i < 11) {
+        if(i > 0)
+          csv += ',';
+        csv += ' ' + td.innerText.replace(/\n|\r/g, '');
+      }
     }); 
     csv += '\n';
   });
@@ -198,6 +231,11 @@ function updateTable(specStr) {
     row.forEach((item, j) => {
       tableStr += `<td data-address="[${i},${j}]">${item.trim()}</td>\n`;
     });
+    tableStr += `<td isButton="true">\n
+                    <button onclick="deleteRow(${i})" class="img-btn">\n
+                      <img src="../delete.svg" alt="Delete">\n
+                    </button>\n
+                  </td>\n`;
     tableStr += '</tr>\n'
   });  
   
@@ -205,7 +243,7 @@ function updateTable(specStr) {
   for(let i = 0; i < 11; i++) {
     tableStr += `<td data-address="[${spec.length},${i}]"></td>\n`;
   }
-  tableStr += '</tr>\n'
+  tableStr += '<td></td>\n</tr>\n'
   
   tableBodyEl.innerHTML = tableStr;
 }
@@ -299,6 +337,12 @@ taEl.addEventListener('click', () => {
   updateSelection();
 });
 
+window.deleteRow = (id) => {
+  [...tableBodyEl.children][id].remove();
+  taEl.value = tableAsCSV(tableBodyEl);
+  model.setSpec(taEl.value);
+  // updateTable(taEl.value);
+}
 
 function updateSelection() {
   const row = getCaretRow(taEl);
@@ -363,12 +407,4 @@ function endLoad() {
     model.loaded = true;
     loaderEl.style.display = 'none';
   }
-}
-
-window.addEventListener('resize', onWindowResize, false);
-
-function onWindowResize() {
-  model.camera.aspect = window.innerWidth / window.innerHeight;
-  model.camera.updateProjectionMatrix();
-  model.renderer.setSize(window.innerWidth, window.innerHeight);
 }
