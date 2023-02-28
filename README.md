@@ -17,7 +17,7 @@ Every part must have a parent assembly. The top level or default assembly can be
 
 3Table is particularly suited to aluminium profile construction design so some profile parts have been included.
 
-Extruded parts are set to 1mm depth by default. Scale the z axis to get the desired length.
+Extruded parts are set to 100mm depth by default. Scale the z axis to get the desired length.
 
 The model can be edited in the table by clicking the cell or by changing the CSV (Comma Separated Values) text.
 

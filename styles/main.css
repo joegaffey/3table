@@ -3,19 +3,6 @@ body {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   overflow: hidden;
 }
-button {
-  user-select: none;
-  border: 0;
-  outline: 0;
-  cursor: pointer;
-  color: white;
-  background-color: rgb(84, 105, 212);
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px 8px;
-  min-height: 24px;                
-}
 dialog {
   max-width: 80vw;
   border-radius: 12px;
@@ -32,8 +19,41 @@ h3 {
   font-size: 16px;
   font-weight: 600;
 }
+.ui-btn {
+  user-select: none;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  color: white;
+  background-color: rgb(84, 105, 212);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+.img-btn {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+.img-btn img {
+  padding-top: 4px;
+  width: 16px;
+  height: 16px;
+}
 .green {
   background-color: rgb(64, 150, 85);
+}
+.warning {
+  color: red;
+  font-size: 11px;
+  position: absolute;
+  top: 2px;
+  width: 100%;
+  text-align: center;
 }
 .loader {       
   font-size: 24px;
@@ -52,14 +72,14 @@ h3 {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 20px;
+  top: 16px;
   left: 10px;
   width: 450px;
   max-width: calc(100vw - 30px);
   resize: both;
-  padding: 8px;
-  border-radius: 8px;
-  background-color: #444444;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #242424;
 }
 .ta-buttons {
   padding-bottom: 4px;

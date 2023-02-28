@@ -8,6 +8,12 @@ let groups = {};
 const scene = new THREE.Scene();
 export const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000);
 
+export const size = 2000;
+const divisions = size / 100;
+
+const gridHelper = new THREE.GridHelper( size, divisions );
+scene.add( gridHelper );
+
 export const aLight = new THREE.AmbientLight(0x404040, 3);
 scene.add(aLight);
 
@@ -166,10 +172,12 @@ function build() {
           const group = getGroup(row[0]);
           rowMap[i] = group;
           const parent = getGroup(row[1]);
-          group.parent = parent;
-          group.visible = visible;
-          parent.add(group);
-          updatePart(group, row);
+          if(group !== parent) {
+            group.parent = parent;
+            group.visible = visible;
+            parent.add(group);
+            updatePart(group, row);
+          }
         }
       }    
     }
@@ -230,3 +238,11 @@ renderer.setAnimationLoop(() => {
     // updateRaycaster();
   animate();
 });
+
+window.addEventListener('resize', onWindowResize, false);
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}

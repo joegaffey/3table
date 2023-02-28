@@ -17,8 +17,8 @@ export const parts = {
   "cube": { name: '100mm cube', type: "Modeled", geom: boxGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
   "sphere": { name: '100mm sphere', type: "Modeled", geom: sphereGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
   "cylinder": { name: '100mm cylinder', type: "Modeled", geom: cylinderGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
-  "8040": { name: '8040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/100,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
-  "4040": { name: '4040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/120,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
+  "8040": { name: '8040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
+  "4040": { name: '4040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
   "c4040": { name: '4040 corner', type: "Modeled", geom: c4040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 2}] },
   "c8040": { name: '8040 corner', type: "Modeled", geom: c8040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 4}] },
 };
