@@ -231,6 +231,10 @@ function updateRaycaster() {
     console.log(intersects)
 }
 
+export function getGroupNames() {
+  return Object.keys(groups);
+}
+
 export let loaded = false;
 
 renderer.setAnimationLoop(() => {

@@ -28,7 +28,7 @@
   </head>
   <body>
     <div class="warning">
-      WARNING: EARLY ALPHA!
+      WARNING: PRE ALPHA!
     </div>
     <div class="loader">
       Loading...
@@ -72,23 +72,13 @@
             <th></th>
           </tr>
         </thead>
-        <tbody class="spec-table-body">
-          <tr>
-            <td>...</td>
-            <td>...</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
+        <tbody class="spec-table-body"></tbody>
       </table>
+      <div class="table-controls">
+        <button id="addButton" class="img-btn">
+          <img src="../add.svg" alt="Add row">
+        </button>
+      </div>
       <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
       <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
     </div>
@@ -109,7 +99,7 @@
       <p>The model can be edited in the table by clicking the cell or by changing the CSV (Comma Separated Values) text.</p>
       <p>If editing the CSV text use a '#' at the start of the line to hide a part.</p>  
       <form method="dialog">
-        <button>Close</button>
+        <button class="ui-btn green">Close</button>
       </form>
     </dialog>
   
@@ -117,25 +107,41 @@
       <h3>Bill Of Material</h3>
       <p id="plText"></p>
       <form method="dialog">
-        <button>Close</button>
-        <button class="green" onclick="dlParts()">Save</button>
+        <button class="ui-btn">Close</button>
+        <button class="ui-btn green" onclick="dlParts()">Save</button>
       </form>
     </dialog>
 
     <dialog id="exportDialog">
       <h3>Import</h3>
       <div class="vButtons">
-        <button class="green" id="importButton">CSV File</button>
+        <button class="ui-btn" id="importButton">CSV File</button>
         <input type="file" id="input-file" accept=".csv" hidden>
       </div>
       <h3>Export</h3>
       <div class="vButtons">
-        <button class="green" onclick="dlCSV()">CSV File</button>
-        <button class="green" onclick="dlParts()">BOM (txt)</button>
-        <button class="green" onclick="dlSTL()">3D Model (STL)</button>
+        <button class="ui-btn" onclick="dlCSV()">CSV File</button>
+        <button class="ui-btn" onclick="dlParts()">BOM (txt)</button>
+        <button class="ui-btn" onclick="dlSTL()">3D Model (STL)</button>
       </div>
       <form class="close" method="dialog">
-        <button>Close</button>
+        <button class="ui-btn green">Close</button>
+      </form>
+    </dialog>
+  
+    <dialog id="addDialog">
+      <h3>Add Part</h3>
+      <p>
+        Select a part<br/>
+        <select name="partSelect" id="part-select"></select>
+      </p>
+      <p>
+        Set the parent<br/>
+        <select name="parentSelect" id="parent-select"></select>
+      </p>
+      <form class="close" method="dialog">
+        <button id="addDialogButton" class="ui-btn green">Add</button>
+        <button class="ui-btn">Cancel</button>
       </form>
     </dialog>
   

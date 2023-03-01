@@ -74,7 +74,7 @@ h3 {
   flex-direction: column;
   top: 16px;
   left: 10px;
-  width: 450px;
+  width: 480px;
   max-width: calc(100vw - 30px);
   resize: both;
   padding: 4px;
