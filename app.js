@@ -7,17 +7,21 @@ const tableBodyEl = document.querySelector('.spec-table > tbody');
 const valSliderEl = document.querySelector('.val-slider');
 const taEl = document.querySelector('#ta');
 const loaderEl = document.querySelector('.loader');
+
 const plDialog = document.querySelector('#plDialog');
 const helpDialog = document.querySelector('#helpDialog');
 const exportDialog = document.querySelector('#exportDialog');
+const addDialog = document.querySelector('#addDialog');
+
 const partsHelpEl = document.querySelector('#partsUl');
 const modelSelectEl = document.querySelector('#model-select');
+const partSelectEl = document.querySelector('#part-select');
+const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
 parts.load(partsLoaded);
 
 tableBodyEl.oninput = (e) => { 
-  // console.log(e.target.attributes['data-address'].value);
   taEl.value = tableAsCSV(tableBodyEl);
   model.setSpec(taEl.value);
   valSliderEl.value = e.target.textContent.trim();
@@ -25,7 +29,6 @@ tableBodyEl.oninput = (e) => {
 
 let selectedTD = null;
 tableBodyEl.onclick = (e) => {
-  console.log(e.target)
   if(e.target.nodeName !== 'TD')
     return;
   if(e.target.getAttribute('isButton'))
@@ -121,10 +124,17 @@ function tableAsCSV(tableEl){
 function partsLoaded() {
   let html = '';
   Object.keys(parts).forEach(model => {
-  if(typeof parts[model] !== 'function')
-    html += `<li>"${model}": ${parts[model].name} (${parts[model].type})</li>\n`;
+    if(typeof parts[model] !== 'function')
+      html += `<li>"${model}": ${parts[model].name} (${parts[model].type})</li>\n`;
   });
   partsHelpEl.innerHTML = html;
+  
+  html = '';  
+  Object.keys(parts).forEach(model => {
+    if(typeof parts[model] !== 'function')
+      html += `<option value="${model}">"${model}": ${parts[model].name} (${parts[model].type})</option>\n`;
+  });
+  partSelectEl.innerHTML = html;
 }
 
 modelSelectEl.onchange = () => {
@@ -140,7 +150,7 @@ function getCSV(name) {
       taEl.value = text;
       updateTable(text);
       model.setSpec(text);
-  });  
+  });
 }
 
 getCSV(modelSelectEl.value);
@@ -237,13 +247,7 @@ function updateTable(specStr) {
                     </button>\n
                   </td>\n`;
     tableStr += '</tr>\n'
-  });  
-  
-  tableStr += '<tr>\n';
-  for(let i = 0; i < 11; i++) {
-    tableStr += `<td data-address="[${spec.length},${i}]"></td>\n`;
-  }
-  tableStr += '<td></td>\n</tr>\n'
+  });
   
   tableBodyEl.innerHTML = tableStr;
 }
@@ -268,6 +272,39 @@ document.querySelector('#listButton').addEventListener('click', (event) => {
   plTextEl.innerText = getBOMText();
   plDialog.showModal();
 });
+
+document.querySelector('#addButton').addEventListener('click', (event) => {
+  addDialog.showModal();
+  let html = '';  
+  const groups = model.getGroupNames();
+  if(groups.length === 0)
+    groups.push('model');
+  groups.forEach(parent => {
+    html += `<option value="${parent}">${parent}</option>\n`;
+  });
+  parentSelectEl.innerHTML = html;
+});
+
+document.querySelector('#addDialogButton').addEventListener('click', (event) => {
+  addPart(partSelectEl.value, parentSelectEl.value);
+});
+
+function addPart(part, parent) {
+  const rowNum = tableBodyEl.rows.length;
+  const row = tableBodyEl.insertRow(-1);
+  [part,parent,1,1,1,0,0,0,0,0,0].map((val, i) => { 
+    const cell = row.insertCell(i);
+    cell.innerHTML = val;
+    cell.setAttribute('data-address', JSON.stringify([rowNum, i]));
+  });
+  const cell = row.insertCell(11);
+  cell.innerHTML = `<button onclick="deleteRow(${rowNum})" class="img-btn">\n
+                      <img src="../delete.svg" alt="Delete">\n
+                    </button>`;
+  cell.isButton = true;
+  taEl.value = tableAsCSV(tableBodyEl);
+  model.setSpec(taEl.value);
+}
 
 function getBOMText() {
   let list = '';
@@ -341,7 +378,7 @@ window.deleteRow = (id) => {
   [...tableBodyEl.children][id].remove();
   taEl.value = tableAsCSV(tableBodyEl);
   model.setSpec(taEl.value);
-  // updateTable(taEl.value);
+  updateTable(taEl.value);
 }
 
 function updateSelection() {
