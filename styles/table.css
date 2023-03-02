@@ -58,6 +58,24 @@ tr:hover td {
   font-size: 10px;
   color: #000000;
 }
+
+.top-thead th:nth-child(3) {
+  text-align: center;
+  border-left: 3px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+.top-thead th:nth-child(4) {
+  text-align: center;
+  border-left: 3px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+.top-thead th:nth-child(5) {
+  text-align: center;
+  border-left: 3px solid #000000;
+  border-right: 3px solid #000000;
+  border-bottom: 1px solid #000000;
+}
+
 .bottom-thead th:nth-child(1) {
   border-top: 0;
   color: #ffffff;
@@ -69,6 +87,7 @@ tr:hover td {
 .bottom-thead th:nth-child(3) {
   text-align: center;
   background-color: #ff8888;
+  border-left: 3px solid #000000;
 }
 .bottom-thead th:nth-child(4) {
   text-align: center;
@@ -81,7 +100,8 @@ tr:hover td {
 }
 .bottom-thead th:nth-child(6) {
   text-align: center;
-  background-color: #ff8888
+  background-color: #ff8888;
+  border-left: 3px solid #000000;
 }
 .bottom-thead th:nth-child(7) {
   text-align: center;
@@ -95,6 +115,7 @@ tr:hover td {
 .bottom-thead th:nth-child(9) {
   text-align: center;
   background-color: #ff8888;
+  border-left: 3px solid #000000;
 }
 .bottom-thead th:nth-child(10) {
   text-align: center;
@@ -103,11 +124,12 @@ tr:hover td {
 .bottom-thead th:nth-child(11) {
   text-align: center;
   background-color: #8888ff;
-  border-right: 1px solid #000000;
+  border-right: 3px solid #000000;
 }
 
 .spec-table > tbody td:nth-child(3) {
   background-color: #ffdada;
+  border-left: 3px solid #000000;
 }
 .spec-table > tbody td:nth-child(4) {
   background-color: #daffda;
@@ -117,6 +139,7 @@ tr:hover td {
 }
 .spec-table > tbody td:nth-child(6) {
   background-color: #ffdada;
+  border-left: 3px solid #000000;
 }
 .spec-table > tbody td:nth-child(7) {
   background-color: #daffda;
@@ -126,12 +149,14 @@ tr:hover td {
 }
 .spec-table > tbody td:nth-child(9) {
   background-color: #ffdada;
+  border-left: 3px solid #000000;
 }
 .spec-table > tbody td:nth-child(10) {
   background-color: #daffda;
 }
 .spec-table > tbody td:nth-child(11) {
   background-color: #dadaff;
+  border-right: 3px solid #000000;
 }
 .spec-table > tbody td:nth-child(12) {
   background-color: #444444;

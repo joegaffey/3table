@@ -2,10 +2,10 @@
 
 import * as model from 'model';
 import parts from 'parts';
+import csvTA from 'CSVTextArea';
 
 const tableBodyEl = document.querySelector('.spec-table > tbody');
 const valSliderEl = document.querySelector('.val-slider');
-const taEl = document.querySelector('#ta');
 const loaderEl = document.querySelector('.loader');
 
 const plDialog = document.querySelector('#plDialog');
@@ -22,8 +22,8 @@ const plTextEl = document.querySelector('#plText');
 parts.load(partsLoaded);
 
 tableBodyEl.oninput = (e) => { 
-  taEl.value = tableAsCSV(tableBodyEl);
-  model.setSpec(taEl.value);
+  csvTA.value = tableAsCSV(tableBodyEl);
+  model.setSpec(csvTA.value);
   valSliderEl.value = e.target.textContent.trim();
 }
 
@@ -97,8 +97,8 @@ function setSliderRange(col) {
 valSliderEl.oninput = e => {
   if(selectedTD)
     selectedTD.innerText = valSliderEl.value;
-  taEl.value = tableAsCSV(tableBodyEl);
-  model.setSpec(taEl.value);
+  csvTA.value = tableAsCSV(tableBodyEl);
+  model.setSpec(csvTA.value);
   if(selectedTD.attributes['data-address']) {
     const row = JSON.parse(selectedTD.attributes['data-address'].value);
     if(Number.isInteger(row[0]))
@@ -147,7 +147,7 @@ function getCSV(name) {
   fetch(modelBase + name)
     .then((response) => response.text())
     .then((text) => {
-      taEl.value = text;
+      csvTA.value = text;
       updateTable(text);
       model.setSpec(text);
   });
@@ -156,7 +156,7 @@ function getCSV(name) {
 getCSV(modelSelectEl.value);
 
 window.dlCSV = () => {
-  downloadText('model.csv', taEl.value);
+  downloadText('model.csv', csvTA.value);
 }
 
 window.dlParts = () => {
@@ -194,16 +194,16 @@ document.getElementById('importButton').addEventListener('click', (e) => {
 }, false);
 
 document.getElementById('csvButton').addEventListener('click', (e) => { 
-  if(taEl.style.display === 'block')
-    taEl.style.display = 'none';
+  if(csvTA.style.display === 'block')
+    csvTA.style.display = 'none';
   else
-    taEl.style.display = 'block';
+    csvTA.style.display = 'block';
 }, false);
 
 function getFile(event) {
 	const input = event.target;
   if ('files' in input && input.files.length > 0) {
-    placeFileContent(taEl, input.files[0]);
+    placeFileContent(csvTA, input.files[0]);
   }
 }
 
@@ -302,8 +302,8 @@ function addPart(part, parent) {
                       <img src="../delete.svg" alt="Delete">\n
                     </button>`;
   cell.isButton = true;
-  taEl.value = tableAsCSV(tableBodyEl);
-  model.setSpec(taEl.value);
+  csvTA.value = tableAsCSV(tableBodyEl);
+  model.setSpec(csvTA.value);
 }
 
 function getBOMText() {
@@ -353,58 +353,39 @@ function getBOMText() {
   return list;
 }
 
-taEl.onkeyup = (e) => {
-  model.setSpec(taEl.value);
-  updateTable(taEl.value);
-  updateSelection();  
-if(e.keyCode === 32 && e.ctrlKey) 
-    lineComplete();
+csvTA.onkeyup = (e) => {
+  update3dData(csvTA.value); 
+  if(e.keyCode === 32 && e.ctrlKey) 
+    csvTA.lineComplete();
 }
 
-taEl.onkeydown = (e) => {
+csvTA.onkeydown = (e) => {
   if(e.keyCode === 9) {
-    wordComplete();
+    csvTA.wordComplete();
     e.preventDefault();
   }
 }
 
-taEl.addEventListener('click', () => {
-  model.setSpec(taEl.value);
-  updateTable(taEl.value);
-  updateSelection();
+csvTA.addEventListener('click', () => {
+  update3dData(csvTA.value);
 });
 
 window.deleteRow = (id) => {
   [...tableBodyEl.children][id].remove();
-  taEl.value = tableAsCSV(tableBodyEl);
-  model.setSpec(taEl.value);
-  updateTable(taEl.value);
+  csvTA.value = tableAsCSV(tableBodyEl);
+  update3dData(csvTA.value);
+}
+
+function update3dData(spec) {
+  model.setSpec(spec);
+  updateTable(spec);
+  updateSelection();
 }
 
 function updateSelection() {
-  const row = getCaretRow(taEl);
+  const row = csvTA.getCaretRow();
   if(row > -1) 
     model.highlightRow(row);  
-}
-
-function lineComplete() {
-  console.log('@ToDo lineComplete');
-}
-
-function wordComplete() {
-  console.log('@ToDo wordComplete');
-}
-
-function getCaretRow(el) {
-  const pos = el.selectionStart;
-  const rows = el.value.split('\n');
-  let count = 0;
-  for (let i = 0; i < rows.length; i++) {
-    count += (rows[i].length + 1);
-    if(count > pos)
-      return i;
-  }
-  return -1;
 }
 
 let isDown = false;
