@@ -1,12 +1,11 @@
 // import { VRButton } from 'vrButton';
 
 import * as model from 'model';
+import * as table from '3DTable';
 import parts from 'parts';
 import csvTA from 'CSVTextArea';
 
-const tableBodyEl = document.querySelector('.spec-table > tbody');
-const valSliderEl = document.querySelector('.val-slider');
-const loaderEl = document.querySelector('.loader');
+// const loaderEl = document.querySelector('.loader');
 
 const plDialog = document.querySelector('#plDialog');
 const helpDialog = document.querySelector('#helpDialog');
@@ -20,106 +19,6 @@ const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
 parts.load(partsLoaded);
-
-tableBodyEl.oninput = (e) => { 
-  csvTA.value = tableAsCSV(tableBodyEl);
-  model.setSpec(csvTA.value);
-  valSliderEl.value = e.target.textContent.trim();
-}
-
-let selectedTD = null;
-tableBodyEl.onclick = (e) => {
-  if(e.target.nodeName !== 'TD')
-    return;
-  if(e.target.getAttribute('isButton'))
-    return;
-  if(!selectedTD)
-    selectTD(e.target);
-  else {
-    if(e.target.isSelected) // Same TD
-      selectedTD.contentEditable = true;
-    else {
-      unselectTD();
-      selectTD(e.target);
-    }
-  }
-  e.stopPropagation();
-}
-
-function unselectTD() {
-  selectedTD.isSelected = false;
-  selectedTD.contentEditable = false;
-  selectedTD.style.background = selectedTD.originalColor;
-  selectedTD.style.outline = 'none';
-  selectedTD = null;
-  valSliderEl.disabled = true;
-}
-
-function selectTD(el) {
-  selectedTD = el;
-  selectedTD.isSelected = true;
-  selectedTD.originalColor = selectedTD.style.background;
-  selectedTD.style.background = 'yellow';
-  selectedTD.style.outline = '5px solid red';
-  valSliderEl.value = selectedTD.textContent.trim();
-  if(selectedTD.attributes['data-address']) {
-    const row = JSON.parse(selectedTD.attributes['data-address'].value)[0];
-    if(Number.isInteger(row)) {
-      model.highlightRow(row);
-    }
-    if(isNaN(selectedTD.innerText))
-      valSliderEl.disabled = true;
-    else {
-      valSliderEl.disabled = false;
-      setSliderRange(JSON.parse(selectedTD.attributes['data-address'].value)[1]);
-    }
-  }
-}
-
-function setSliderRange(col) {
-  if(col < 5) {
-    valSliderEl.max = model.size / 100;
-    valSliderEl.min = 0;
-    valSliderEl.step = 0.01;
-  }
-  else if(col < 8) {
-    valSliderEl.max = model.size / 2;
-    valSliderEl.min = model.size / -2;
-    valSliderEl.step = 1;
-  }
-  else {
-    valSliderEl.max = 180;
-    valSliderEl.min = -180;
-    valSliderEl.step = 1;
-  }
-}
-
-valSliderEl.oninput = e => {
-  if(selectedTD)
-    selectedTD.innerText = valSliderEl.value;
-  csvTA.value = tableAsCSV(tableBodyEl);
-  model.setSpec(csvTA.value);
-  if(selectedTD.attributes['data-address']) {
-    const row = JSON.parse(selectedTD.attributes['data-address'].value);
-    if(Number.isInteger(row[0]))
-      model.highlightRow(row[0]);
-  }
-};
-
-function tableAsCSV(tableEl){
-  let csv = '';
-  Array.from(tableEl.children).forEach(tr => {
-    Array.from(tr.children).forEach((td, i) => {
-      if(i < 11) {
-        if(i > 0)
-          csv += ',';
-        csv += ' ' + td.innerText.replace(/\n|\r/g, '');
-      }
-    }); 
-    csv += '\n';
-  });
-  return csv;
-}
 
 function partsLoaded() {
   let html = '';
@@ -141,6 +40,12 @@ modelSelectEl.onchange = () => {
   getCSV(modelSelectEl.value);
 };
 
+
+table.tableBodyEl.addEventListener('update', (e) => {
+  csvTA.value = e.detail.data;
+  model.fromCSV(e.detail.data);
+});  
+
 const modelBase = './models/';
       
 function getCSV(name) {
@@ -148,8 +53,8 @@ function getCSV(name) {
     .then((response) => response.text())
     .then((text) => {
       csvTA.value = text;
-      updateTable(text);
-      model.setSpec(text);
+      table.fromCSV(text);
+      model.fromCSV(text);
   });
 }
 
@@ -210,8 +115,8 @@ function getFile(event) {
 function placeFileContent(target, file) {
 	readFileContent(file).then(content => {
   	target.value = content;
-    updateTable(content);
-	  model.setSpec(content);
+    table.fromCSV(content);
+	  model.fromCSV(content);
   }).catch(error => console.log(error));
 }
 
@@ -222,34 +127,6 @@ function readFileContent(file) {
     reader.onerror = error => reject(error);
     reader.readAsText(file);
   })
-}
-
-function updateTable(specStr) {
-  const spec = [];
-  if(!specStr)
-    return;
-  let tableStr = '';
-  specStr.split('\n').forEach(l => {
-    if(l.trim().length > 0) {
-      if(l.split(',').length > 10)
-        spec.push(l.split(','));
-    }
-  });
-  
-  spec.forEach((row, i) => {
-    tableStr += '<tr>\n';
-    row.forEach((item, j) => {
-      tableStr += `<td data-address="[${i},${j}]">${item.trim()}</td>\n`;
-    });
-    tableStr += `<td isButton="true">\n
-                    <button onclick="deleteRow(${i})" class="img-btn">\n
-                      <img src="../delete.svg" alt="Delete">\n
-                    </button>\n
-                  </td>\n`;
-    tableStr += '</tr>\n'
-  });
-  
-  tableBodyEl.innerHTML = tableStr;
 }
 
 let loadingCount = 0;
@@ -286,25 +163,8 @@ document.querySelector('#addButton').addEventListener('click', (event) => {
 });
 
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
-  addPart(partSelectEl.value, parentSelectEl.value);
+  table.addPart(partSelectEl.value, parentSelectEl.value);
 });
-
-function addPart(part, parent) {
-  const rowNum = tableBodyEl.rows.length;
-  const row = tableBodyEl.insertRow(-1);
-  [part,parent,1,1,1,0,0,0,0,0,0].map((val, i) => { 
-    const cell = row.insertCell(i);
-    cell.innerHTML = val;
-    cell.setAttribute('data-address', JSON.stringify([rowNum, i]));
-  });
-  const cell = row.insertCell(11);
-  cell.innerHTML = `<button onclick="deleteRow(${rowNum})" class="img-btn">\n
-                      <img src="../delete.svg" alt="Delete">\n
-                    </button>`;
-  cell.isButton = true;
-  csvTA.value = tableAsCSV(tableBodyEl);
-  model.setSpec(csvTA.value);
-}
 
 function getBOMText() {
   let list = '';
@@ -371,14 +231,14 @@ csvTA.addEventListener('click', () => {
 });
 
 window.deleteRow = (id) => {
-  [...tableBodyEl.children][id].remove();
-  csvTA.value = tableAsCSV(tableBodyEl);
+  table.deleteRow(id);
+  csvTA.value = table.asCSV();
   update3dData(csvTA.value);
 }
 
-function update3dData(spec) {
-  model.setSpec(spec);
-  updateTable(spec);
+function update3dData(csvStr) {
+  model.fromCSV(csvStr);
+  table.fromCSV(csvStr);
   updateSelection();
 }
 
@@ -388,41 +248,41 @@ function updateSelection() {
     model.highlightRow(row);  
 }
 
-let isDown = false;
-let isDrag = false;
+// let isDown = false;
+// let isDrag = false;
 
-function onPointerMove(event) {
-  model.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-  model.pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+// function onPointerMove(event) {
+//   model.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+//   model.pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-  if(isDown)
-    isDrag = true;
-  else
-    isDrag = false;
-}
-window.addEventListener('pointermove', onPointerMove);
+//   if(isDown)
+//     isDrag = true;
+//   else
+//     isDrag = false;
+// }
+// window.addEventListener('pointermove', onPointerMove);
 
-function onPointerUp() {
-  isDown = false;
-  if(isDrag)
-    return;
-}
-window.addEventListener('pointerup', onPointerUp);
+// function onPointerUp() {
+//   isDown = false;
+//   if(isDrag)
+//     return;
+// }
+// window.addEventListener('pointerup', onPointerUp);
 
-function onPointerDown() {
-  isDown = true;
-}      
-window.addEventListener('pointerdown', onPointerDown);
+// function onPointerDown() {
+//   isDown = true;
+// }      
+// window.addEventListener('pointerdown', onPointerDown);
 
-function startLoad() {
-  loadingCount++;
-  loaderEl.style.display = 'block';
-}
+// function startLoad() {
+//   loadingCount++;
+//   loaderEl.style.display = 'block';
+// }
 
-function endLoad() {
-  loadingCount--;
-  if(loadingCount === 0) {
-    model.loaded = true;
-    loaderEl.style.display = 'none';
-  }
-}
+// function endLoad() {
+//   loadingCount--;
+//   if(loadingCount === 0) {
+//     model.loaded = true;
+//     loaderEl.style.display = 'none';
+//   }
+// }

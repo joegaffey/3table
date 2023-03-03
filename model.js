@@ -67,10 +67,10 @@ setCamera(Object.values(cams)[0]);
 
 let xrayOn = false;
 const rowMap = {};
-let specStr = null;
+let csvStr = null;
 
-export function setSpec(str) {
-  specStr = str;
+export function fromCSV(str) {
+  csvStr = str;
   rebuild();
 }
 
@@ -139,14 +139,14 @@ export function getAllMeshInstances() {
 }
 
 function build() {
-  const spec = [];
-  if(!specStr)
+  const rows = [];
+  if(!csvStr)
     return;
-  specStr.split('\n').forEach(l => {
-    spec.push(l.split(','));
+  csvStr.split('\n').forEach(l => {
+    rows.push(l.split(','));
   });
   
-  spec.forEach((row, i) => {
+  rows.forEach((row, i) => {
     try {
       if(row.length > 9) {
         row = row.map(str => str.trim());
@@ -190,11 +190,11 @@ function build() {
   });
 }     
 
-function updatePart(part, spec) {
-  part.scale.set(spec[2] * part.scale.x, spec[3] * part.scale.y, spec[4] * part.scale.z);
-  part.position.set(spec[5], spec[6], spec[7]); 
-  part.rotation.set(spec[8] * (Math.PI / 180), spec[9] * (Math.PI / 180), spec[10] * (Math.PI / 180)); 
-  part.userData.scaleZ = spec[4]; //Store original scale
+function updatePart(part, props) {
+  part.scale.set(props[2] * part.scale.x, props[3] * part.scale.y, props[4] * part.scale.z);
+  part.position.set(props[5], props[6], props[7]); 
+  part.rotation.set(props[8] * (Math.PI / 180), props[9] * (Math.PI / 180), props[10] * (Math.PI / 180)); 
+  part.userData.scaleZ = props[4]; //Store original scale
 }
 
 export function setXRay(on) {
@@ -224,12 +224,12 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-function updateRaycaster() {
-  raycaster.setFromCamera(pointer, camera);
-  let intersects = raycaster.intersectObjects(scene.children, false);
-  if(intersects.length > 0)
-    console.log(intersects)
-}
+// function updateRaycaster() {
+//   raycaster.setFromCamera(pointer, camera);
+//   let intersects = raycaster.intersectObjects(scene.children, false);
+//   if(intersects.length > 0)
+//     console.log(intersects)
+// }
 
 export function getGroupNames() {
   return Object.keys(groups);
