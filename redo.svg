@@ -1,0 +1,11 @@
+<svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clip">
+      <rect x="240" y="80" width="440" height="440" />
+    </clipPath>
+  </defs>
+ <g transform="scale(-1, 1)" transform-origin="center">
+  <polygon points="0,150 250,0 250,300" style="fill: rgb(180, 180, 180);" />
+  <circle cx="260" cy="280" r="140" stroke="rgb(180, 180, 180)" stroke-width="100" clip-path="url(#clip)"/>
+ </g>
+</svg>

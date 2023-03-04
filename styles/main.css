@@ -25,7 +25,7 @@ h3 {
   outline: 0;
   cursor: pointer;
   color: white;
-  background-color: rgb(84, 105, 212);
+  background-color: rgb(80, 80, 80);
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
@@ -46,6 +46,9 @@ h3 {
 }
 .green {
   background-color: rgb(64, 150, 85);
+}
+.blue {
+  background-color: rgb(64, 85, 150);
 }
 .warning {
   color: red;
@@ -68,7 +71,7 @@ h3 {
   background-color: #222222;
   color: lightgray;
 }
-.ta-container {
+.gui-container {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -81,14 +84,14 @@ h3 {
   border-radius: 4px;
   background-color: #242424;
 }
-.ta-buttons {
+.app-buttons {
   padding-bottom: 4px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   margin: 2px;
 }
-.ta-buttons > * {
+.app-buttons > * {
   margin: 2px;
   user-select: none;
 }

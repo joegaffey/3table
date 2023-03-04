@@ -1,0 +1,6 @@
+<svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <rect x="0" y="0" style="fill: rgb(180, 180, 180);" width="250" height="300"></rect>
+    <rect x="100" y="150" style="fill: rgba(180, 180, 180, 0.5);" width="250" height="300"></rect>
+  </g>
+</svg>
