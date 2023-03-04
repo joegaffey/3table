@@ -1,7 +1,7 @@
 <svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
-  <circle style="fill: rgb(255, 0, 0);" cx="220" cy="220" r="220"></circle>
-  <g>
-    <rect x="270" y="-150" transform="rotate(45 0 0)" style="fill: rgb(255, 255, 255);" width="75" height="300"></rect>
-    <rect x="-40" y="150" transform="rotate(-45 0 0)" style="fill: rgb(255, 255, 255);" width="75" height="300"></rect>
+<!--   <g transform="rotate(45 0 0) translate(220 0 0)"> -->
+  <g transform="translate(220, -80) rotate(45)">
+    <rect x="170" y="0" style="fill: rgb(180, 180, 180);" width="100" height="440"></rect>
+    <rect x="0" y="170" style="fill: rgb(180, 180, 180);" width="440" height="100"></rect>
   </g>
 </svg>

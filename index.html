@@ -35,8 +35,8 @@
     <div class="loader">
       Loading...
     </div>
-    <div class="ta-container">
-      <div class="ta-buttons">
+    <div class="gui-container">
+      <div class="app-buttons">
         <button id="helpButton" class="ui-btn">?</button>
         <select name="models" id="model-select">
           <option value="cube.csv">Cube</option>
@@ -79,8 +79,28 @@
       </table>
       <div class="table-controls">
         <button id="addButton" class="img-btn">
-          <img src="../add.svg" alt="Add row">
+          <img src="../add.svg" alt="Add part">
         </button>
+        <!--    
+        <button id="deleteButton" class="img-btn">
+          <img src="../delete.svg" alt="Delete part">
+        </button>
+        <button id="copyButton" class="img-btn">
+          <img src="../copy.svg" alt="Copy part">
+        </button>
+        <button id="upButton" class="img-btn">
+          <img src="../up.svg" alt="Move part up">
+        </button>
+        <button id="downButton" class="img-btn">
+          <img src="../down.svg" alt="Move part down">
+        </button>
+        <button id="undoButton" class="img-btn">
+          <img src="../undo.svg" alt="Undo">
+        </button>
+        <button id="redoButton" class="img-btn">
+          <img src="../redo.svg" alt="Undo"> 
+        </button>  
+        -->
       </div>
       <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
       <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
@@ -110,7 +130,7 @@
       <h3>Bill Of Material</h3>
       <p id="plText"></p>
       <form method="dialog">
-        <button class="ui-btn">Close</button>
+        <button class="ui-btn blue">Close</button>
         <button class="ui-btn green" onclick="dlParts()">Save</button>
       </form>
     </dialog>
@@ -118,14 +138,14 @@
     <dialog id="exportDialog">
       <h3>Import</h3>
       <div class="vButtons">
-        <button class="ui-btn" id="importButton">CSV File</button>
+        <button class="ui-btn blue" id="importButton">CSV File</button>
         <input type="file" id="input-file" accept=".csv" hidden>
       </div>
       <h3>Export</h3>
       <div class="vButtons">
-        <button class="ui-btn" onclick="dlCSV()">CSV File</button>
-        <button class="ui-btn" onclick="dlParts()">BOM (txt)</button>
-        <button class="ui-btn" onclick="dlSTL()">3D Model (STL)</button>
+        <button class="ui-btn blue" onclick="dlCSV()">CSV File</button>
+        <button class="ui-btn blue" onclick="dlParts()">BOM (txt)</button>
+        <button class="ui-btn blue" onclick="dlSTL()">3D Model (STL)</button>
       </div>
       <form class="close" method="dialog">
         <button class="ui-btn green">Close</button>
@@ -144,7 +164,7 @@
       </p>
       <form class="close" method="dialog">
         <button id="addDialogButton" class="ui-btn green">Add</button>
-        <button class="ui-btn">Cancel</button>
+        <button class="ui-btn blue">Cancel</button>
       </form>
     </dialog>
   
