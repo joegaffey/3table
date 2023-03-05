@@ -40,7 +40,6 @@ modelSelectEl.onchange = () => {
   getCSV(modelSelectEl.value);
 };
 
-
 table.tableBodyEl.addEventListener('update', (e) => {
   csvTA.value = e.detail.data;
   model.fromCSV(e.detail.data);
@@ -160,6 +159,12 @@ document.querySelector('#addButton').addEventListener('click', (event) => {
     html += `<option value="${parent}">${parent}</option>\n`;
   });
   parentSelectEl.innerHTML = html;
+});
+
+document.querySelector('#deleteButton').addEventListener('click', (event) => {
+  table.deleteSelectedRow();
+  csvTA.value = table.asCSV();
+  update3dData(csvTA.value);
 });
 
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
