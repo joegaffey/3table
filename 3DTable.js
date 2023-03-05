@@ -15,8 +15,6 @@ tableBodyEl.onclick = (e) => {
     focus = true;
   if(e.target.nodeName !== 'TD')
     return;
-  if(e.target.getAttribute('isButton'))
-    return;
   if(!selectedCell)
     selectCell(e.target, focus);
   else if(!e.target.isSelected) {
@@ -121,11 +119,6 @@ export function fromCSV(csv) {
     row.forEach((item, j) => {
       html += `<td data-address="[${i},${j}]">${item.trim()}</td>\n`;
     });
-    html += `<td isButton="true">\n
-                    <button onclick="deleteRow(${i})" class="img-btn">\n
-                      <img src="../delete.svg" alt="Delete">\n
-                    </button>\n
-                  </td>\n`;
     html += '</tr>\n'
   });
   
@@ -140,14 +133,17 @@ export function addPart(part, parent) {
     cell.innerHTML = val;
     cell.setAttribute('data-address', JSON.stringify([rowNum, i]));
   });
-  const cell = row.insertCell(11);
-  cell.innerHTML = `<button onclick="deleteRow(${rowNum})" class="img-btn">\n
-                      <img src="../delete.svg" alt="Delete">\n
-                    </button>`;
-  cell.isButton = true;
   tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
 }
 
 export function deleteRow(id) {
+  console.log(id);
+  unselectCell();
   [...tableBodyEl.children][id].remove();
+  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+}
+
+export function deleteSelectedRow(id) {
+  if(selectedCell)
+    deleteRow(JSON.parse(selectedCell.attributes['data-address'].value)[0]);
 }
