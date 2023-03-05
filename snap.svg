@@ -1,0 +1,9 @@
+<svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <rect x="120" y="120" style="fill: rgb(180, 180, 180);" width="200" height="200"></rect>
+    <line x1="0" y1="110" x2="440" y2="110" stroke-width="50" stroke="rgb(180, 180, 180)" opacity="0.75"/>
+    <line x1="0" y1="320" x2="440" y2="320" stroke-width="50" stroke="rgb(180, 180, 180)" opacity="0.75"/>
+    <line x1="110" y1="0" x2="110" y2="440" stroke-width="50" stroke="rgb(180, 180, 180)" opacity="0.75"/>
+    <line x1="320" y1="0" x2="320" y2="440" stroke-width="50" stroke="rgb(180, 180, 180)" opacity="0.75"/>
+  </g>
+</svg>
