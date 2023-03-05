@@ -2,6 +2,7 @@ import * as model from 'model';
 
 export const tableBodyEl = document.querySelector('.spec-table > tbody');
 const valSliderEl = document.querySelector('.val-slider');
+const ticksEl = document.querySelector('.ticks');
 
 tableBodyEl.oninput = (e) => { 
   valSliderEl.value = e.target.textContent.trim();
@@ -31,6 +32,7 @@ function unselectCell() {
   selectedCell.style.outline = 'none';
   selectedCell = null;
   valSliderEl.disabled = true;
+  ticksEl.style.opacity = 0.2;
 }
 
 function selectCell(el, focus) {
@@ -46,15 +48,40 @@ function selectCell(el, focus) {
   valSliderEl.value = selectedCell.textContent.trim();
   if(selectedCell.attributes['data-address']) {
     const row = JSON.parse(selectedCell.attributes['data-address'].value)[0];
+    const col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
     if(Number.isInteger(row)) {
       model.highlightRow(row);
     }
-    if(isNaN(selectedCell.innerText))
+    if(isNaN(selectedCell.innerText)) {
       valSliderEl.disabled = true;
+      ticksEl.style.opacity = 0.2;
+    }
     else {
       valSliderEl.disabled = false;
+      ticksEl.style.opacity = 1;
       setSliderRange(JSON.parse(selectedCell.attributes['data-address'].value)[1]);
     }
+  }
+}
+
+function setTicks(count) {
+  ticksEl.innerHTML = '<span class="tick"></span>\n';
+  for(let i = 0; i < count; i++) {
+    ticksEl.innerHTML += '<span class="tick">|</span>\n'
+  }
+}
+
+let snapOn = true;
+
+export function toggleSnap() {
+  if(snapOn) {
+    snapOn = false;
+  }
+  else {
+    snapOn = true;
+  }
+  if(selectedCell) {
+    setSliderRange(JSON.parse(selectedCell.attributes['data-address'].value)[1]);
   }
 }
 
@@ -62,17 +89,38 @@ function setSliderRange(col) {
   if(col < 5) {
     valSliderEl.max = model.size / 100;
     valSliderEl.min = 0;
-    valSliderEl.step = 0.01;
+    if(snapOn) {
+      valSliderEl.step = 0.5;
+      setTicks(valSliderEl.max / valSliderEl.step);
+    }
+    else {
+      valSliderEl.step = 0.01;
+      setTicks(0);
+    }
   }
   else if(col < 8) {
     valSliderEl.max = model.size / 2;
     valSliderEl.min = model.size / -2;
-    valSliderEl.step = 1;
+    if(snapOn) {
+      valSliderEl.step = 50;
+      setTicks(model.size / valSliderEl.step);
+    }
+    else {
+      valSliderEl.step = 1;
+      setTicks(0);
+    }
   }
   else {
     valSliderEl.max = 180;
     valSliderEl.min = -180;
-    valSliderEl.step = 1;
+    if(snapOn) {
+      valSliderEl.step = 10;
+      setTicks(360 / valSliderEl.step);
+    }
+    else {
+      valSliderEl.step = 1;
+      setTicks(0);
+    }
   }
 }
 

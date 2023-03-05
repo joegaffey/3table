@@ -173,6 +173,10 @@ document.querySelector('#copyButton').addEventListener('click', (event) => {
   update3dData(csvTA.value);
 });
 
+document.querySelector('#snapButton').addEventListener('click', (event) => {
+  table.toggleSnap();
+});
+
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
   table.addPart(partSelectEl.value, parentSelectEl.value);
 });
@@ -240,12 +244,6 @@ csvTA.onkeydown = (e) => {
 csvTA.addEventListener('click', () => {
   update3dData(csvTA.value);
 });
-
-window.deleteRow = (id) => {
-  table.deleteRow(id);
-  csvTA.value = table.asCSV();
-  update3dData(csvTA.value);
-}
 
 function update3dData(csvStr) {
   model.fromCSV(csvStr);

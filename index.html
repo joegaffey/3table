@@ -85,7 +85,11 @@
         <button id="copyButton" class="img-btn">
           <img src="../copy.svg" alt="Copy part">
         </button>
+        <button id="snapButton" class="img-btn">
+          <img src="../snap.svg" alt="Snap"> 
+        </button>
         <!--    
+        <span class="snap">0</span>
         <button id="upButton" class="img-btn">
           <img src="../up.svg" alt="Move part up">
         </button>
@@ -97,13 +101,13 @@
         </button>
         <button id="redoButton" class="img-btn">
           <img src="../redo.svg" alt="Redo"> 
-        </button>  
-        <button id="snapButton" class="img-btn">
-          <img src="../snap.svg" alt="Snap"> 
-        </button>  
+        </button>    
         -->
       </div>
-      <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
+      <div class="slider">
+        <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
+        <div class="ticks" style="opacity:0.2;"></div>
+      </div>
       <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
     </div>
        
