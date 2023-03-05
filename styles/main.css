@@ -20,6 +20,13 @@ h3 {
   font-size: 16px;
   font-weight: 600;
 }
+.snap {
+  color: rgb(180, 180, 180);
+}
+.table-controls {
+  padding-top: 4px;
+  padding-left: 4px;
+}
 .ui-btn {
   user-select: none;
   border: 0;
