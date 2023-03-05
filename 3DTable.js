@@ -143,7 +143,16 @@ export function deleteRow(id) {
   tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
 }
 
-export function deleteSelectedRow(id) {
+export function deleteSelectedRow() {
   if(selectedCell)
     deleteRow(JSON.parse(selectedCell.attributes['data-address'].value)[0]);
+}
+
+export function copySelectedRow() {
+  if(!selectedCell)
+    return;
+  const rowId = JSON.parse(selectedCell.attributes['data-address'].value)[0];
+  const clone = [...tableBodyEl.children][rowId].cloneNode(true); 
+  var newRow = tableBodyEl.insertRow(rowId + 1);
+  newRow.replaceWith(clone);
 }

@@ -167,6 +167,12 @@ document.querySelector('#deleteButton').addEventListener('click', (event) => {
   update3dData(csvTA.value);
 });
 
+document.querySelector('#copyButton').addEventListener('click', (event) => {
+  table.copySelectedRow();
+  csvTA.value = table.asCSV();
+  update3dData(csvTA.value);
+});
+
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
   table.addPart(partSelectEl.value, parentSelectEl.value);
 });
