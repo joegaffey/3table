@@ -20,6 +20,9 @@ h3 {
   font-size: 16px;
   font-weight: 600;
 }
+.hide {
+  display: none;
+}
 .snap {
   color: rgb(180, 180, 180);
 }
@@ -46,6 +49,9 @@ h3 {
   cursor: pointer;
   overflow: hidden;
   outline: none;
+}
+.img-btn:disabled {
+  opacity: 0.2;
 }
 .img-btn img {
   padding-top: 4px;

@@ -6,7 +6,7 @@ const ticksEl = document.querySelector('.ticks');
 
 tableBodyEl.oninput = (e) => { 
   valSliderEl.value = e.target.textContent.trim();
-  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+  sendUpdate();
 }
 
 let selectedCell = null;
@@ -127,13 +127,17 @@ function setSliderRange(col) {
 valSliderEl.oninput = e => {
   if(selectedCell)
     selectedCell.innerText = valSliderEl.value;
-  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+  sendUpdate();
   if(selectedCell.attributes['data-address']) {
     const row = JSON.parse(selectedCell.attributes['data-address'].value);
     if(Number.isInteger(row[0]))
       model.highlightRow(row[0]);
   }
 };
+
+function sendUpdate() {
+  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+}
 
 export function asCSV(){
   let csv = '';
@@ -181,14 +185,14 @@ export function addPart(part, parent) {
     cell.innerHTML = val;
     cell.setAttribute('data-address', JSON.stringify([rowNum, i]));
   });
-  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+  sendUpdate();
 }
 
 export function deleteRow(id) {
   console.log(id);
   unselectCell();
   [...tableBodyEl.children][id].remove();
-  tableBodyEl.dispatchEvent(new CustomEvent('update', { detail: { data: asCSV() }}));
+  sendUpdate();
 }
 
 export function deleteSelectedRow() {

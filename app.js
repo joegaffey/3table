@@ -18,7 +18,13 @@ const partSelectEl = document.querySelector('#part-select');
 const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
+const undoButton = document.querySelector('#undoButton');
+const redoButton = document.querySelector('#redoButton');
+
 parts.load(partsLoaded);
+
+let history = []; // History is not the past but a map of the past
+let future = []; // There's no fate but what we make for ourselves
 
 function partsLoaded() {
   let html = '';
@@ -43,7 +49,18 @@ modelSelectEl.onchange = () => {
 table.tableBodyEl.addEventListener('update', (e) => {
   csvTA.value = e.detail.data;
   model.fromCSV(e.detail.data);
+  debounce(() => addHistory(e.detail.data));
 });  
+
+
+/** https://www.freecodecamp.org/news/javascript-debounce-example/ */
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 
 const modelBase = './models/';
       
@@ -54,6 +71,7 @@ function getCSV(name) {
       csvTA.value = text;
       table.fromCSV(text);
       model.fromCSV(text);
+      addHistory(text);
   });
 }
 
@@ -116,6 +134,7 @@ function placeFileContent(target, file) {
   	target.value = content;
     table.fromCSV(content);
 	  model.fromCSV(content);
+    addHistory(content);
   }).catch(error => console.log(error));
 }
 
@@ -179,6 +198,14 @@ document.querySelector('#snapButton').addEventListener('click', (event) => {
 
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
   table.addPart(partSelectEl.value, parentSelectEl.value);
+});
+
+undoButton.addEventListener('click', (event) => {
+  undo();
+});
+
+redoButton.addEventListener('click', (event) => {
+  redo();
 });
 
 function getBOMText() {
@@ -246,6 +273,7 @@ csvTA.addEventListener('click', () => {
 });
 
 function update3dData(csvStr) {
+  addHistory(csvStr);
   model.fromCSV(csvStr);
   table.fromCSV(csvStr);
   updateSelection();
@@ -256,6 +284,46 @@ function updateSelection() {
   if(row > -1) 
     model.highlightRow(row);  
 }
+
+/** History is written by the victors. */
+function addHistory(csvStr) {
+  if(history[history.length] > 0 && history[history.length].trim() === csvStr.trim())
+    return;
+  undoButton.disabled = false;
+  future = [];
+  redoButton.disabled = true;
+  history.push(csvStr);
+  if(history.length > 100)
+    history = history.splice(-1);
+}
+
+/** The past is never where you think you left it */
+function undo() {
+  const lastState = history.pop();
+  if(history.length < 1)
+    undoButton.disabled = true;
+  future.push(lastState);
+  redoButton.disabled = false;
+  model.fromCSV(lastState);
+  table.fromCSV(lastState);
+  updateSelection();
+}
+
+/** Those who do not remember the past are condemned to repeat it. */
+function redo() {
+  if(future.length < 1)
+    return;
+  const lastState = future.pop();
+  if(future.length < 1) {
+    redoButton.disabled = true;
+    undoButton.disabled = false;
+  }
+  history.push(lastState);
+  model.fromCSV(lastState);
+  table.fromCSV(lastState);
+  updateSelection();
+}
+
 
 // let isDown = false;
 // let isDrag = false;
