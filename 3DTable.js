@@ -16,26 +16,24 @@ tableBodyEl.onclick = (e) => {
     focus = true;
   if(e.target.nodeName !== 'TD')
     return;
-  if(!selectedCell)
-    selectCell(e.target, focus);
-  else if(!e.target.isSelected) {
-    unselectCell();
-    selectCell(e.target, focus);
-  }
+  selectCell(e.target, focus);
   e.stopPropagation();
 }
 
 function unselectCell() {
+  if(!selectedCell)
+    return;
   selectedCell.isSelected = false;
   selectedCell.contentEditable = false;
   selectedCell.style.background = selectedCell.originalColor;
   selectedCell.style.outline = 'none';
   selectedCell = null;
-  valSliderEl.disabled = true;
-  ticksEl.style.opacity = 0.2;
+  disableSlider();
 }
 
 function selectCell(el, focus) {
+  if(selectedCell)
+    unselectCell();
   selectedCell = el;
   selectedCell.isSelected = true;
   selectedCell.originalColor = selectedCell.style.background;
@@ -53,15 +51,35 @@ function selectCell(el, focus) {
       model.highlightRow(row);
     }
     if(isNaN(selectedCell.innerText)) {
-      valSliderEl.disabled = true;
-      ticksEl.style.opacity = 0.2;
+      disableSlider();
     }
     else {
-      valSliderEl.disabled = false;
-      ticksEl.style.opacity = 1;
+      enableSlider();
       setSliderRange(JSON.parse(selectedCell.attributes['data-address'].value)[1]);
     }
   }
+}
+
+function disableSlider() {
+  valSliderEl.disabled = true;
+  ticksEl.style.opacity = 0;
+}
+
+function enableSlider() {
+  valSliderEl.disabled = false;
+  ticksEl.style.opacity = 1;
+}
+      
+
+export function selectCellByCoord(row, col, focus) {
+  if(!col && selectedCell)
+     col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
+  const rowEl = tableBodyEl.rows[row];
+  if(!rowEl)
+    return;
+  const cell = rowEl.cells[col];
+  if(cell)
+    selectCell(cell, focus);
 }
 
 function setTicks(count) {
@@ -178,33 +196,54 @@ export function fromCSV(csv) {
 }
 
 export function addPart(part, parent) {
-  const rowNum = tableBodyEl.rows.length;
-  const row = tableBodyEl.insertRow(-1);
+  let row = -1;
+  if(selectedCell) {
+    row = JSON.parse(selectedCell.attributes['data-address'].value)[0] + 1;
+  }
+  const rowEl = tableBodyEl.insertRow(row);
   [part,parent,1,1,1,0,0,0,0,0,0].map((val, i) => { 
-    const cell = row.insertCell(i);
+    const cell = rowEl.insertCell(i);
     cell.innerHTML = val;
-    cell.setAttribute('data-address', JSON.stringify([rowNum, i]));
   });
+  setCellAddresses();
+  selectCellByCoord(row);
   sendUpdate();
 }
 
-export function deleteRow(id) {
-  console.log(id);
-  unselectCell();
-  [...tableBodyEl.children][id].remove();
+export function deleteRow(row) {
+  [...tableBodyEl.children][row].remove();
+  setCellAddresses();
   sendUpdate();
 }
 
 export function deleteSelectedRow() {
-  if(selectedCell)
-    deleteRow(JSON.parse(selectedCell.attributes['data-address'].value)[0]);
+  if(selectedCell) {
+    const row = JSON.parse(selectedCell.attributes['data-address'].value)[0];
+    const col = JSON.parse(selectedCell.attributes['data-address'].value)[1]
+    unselectCell();
+    deleteRow(row);
+    if(tableBodyEl.rows[row])
+      selectCellByCoord(row, col, true);
+  }
 }
 
 export function copySelectedRow() {
   if(!selectedCell)
     return;
-  const rowId = JSON.parse(selectedCell.attributes['data-address'].value)[0];
-  const clone = [...tableBodyEl.children][rowId].cloneNode(true); 
-  var newRow = tableBodyEl.insertRow(rowId + 1);
-  newRow.replaceWith(clone);
+  const row = JSON.parse(selectedCell.attributes['data-address'].value)[0];
+  const col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
+  unselectCell();
+  const cloneEl = [...tableBodyEl.children][row].cloneNode(true); 
+  var newRowEl = tableBodyEl.insertRow(row + 1);
+  newRowEl.replaceWith(cloneEl);
+  setCellAddresses();
+  selectCellByCoord(row + 1, col, true);
+}
+
+function setCellAddresses() {
+  [...tableBodyEl.rows].forEach((row, i) => {
+    [...row.cells].forEach((cell, j) => {
+      cell.setAttribute('data-address', `[${i},${j}]`);
+    });
+  });
 }

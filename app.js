@@ -256,13 +256,19 @@ function update3dData(csvStr, source) {
     table.fromCSV(csvStr);
   if(source !== csvTA)
     csvTA.value = csvStr;
-  updateSelection();
+  updateSelection(source);
 }
 
-function updateSelection() {
-  const row = csvTA.getCaretRow();
-  if(row > -1) 
-    model.highlightRow(row);  
+function updateSelection(source) {
+  let row = -1;
+  if(source === csvTA) {
+    row = csvTA.getCaretRow();
+  }
+  if(row > -1) {
+    model.highlightRow(row);
+    if(source === csvTA) 
+      table.selectCellByCoord(row);
+  }
 }
 
 const debounce = (func, delay) => {
