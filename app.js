@@ -43,39 +43,25 @@ function partsLoaded() {
 }
 
 modelSelectEl.onchange = () => {
-  getCSV(modelSelectEl.value);
+  getCSVFile(modelSelectEl.value);
 };
 
 table.tableBodyEl.addEventListener('update', (e) => {
-  csvTA.value = e.detail.data;
-  model.fromCSV(e.detail.data);
-  debounce(() => addHistory(e.detail.data));
+  update3dData(e.detail.data, table);
 });  
 
 
-/** https://www.freecodecamp.org/news/javascript-debounce-example/ */
-function debounce(func, timeout = 300){
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
-  };
-}
-
 const modelBase = './models/';
       
-function getCSV(name) {
+function getCSVFile(name) {
   fetch(modelBase + name)
     .then((response) => response.text())
     .then((text) => {
-      csvTA.value = text;
-      table.fromCSV(text);
-      model.fromCSV(text);
-      addHistory(text);
+      update3dData(text, null);
   });
 }
 
-getCSV(modelSelectEl.value);
+getCSVFile(modelSelectEl.value);
 
 window.dlCSV = () => {
   downloadText('model.csv', csvTA.value);
@@ -109,7 +95,7 @@ function downloadText(name, text) {
 }
 
 const fileInput = document.getElementById('input-file');
-fileInput.addEventListener('change', getFile);
+fileInput.addEventListener('change', getLocalCSVFile);
 
 document.getElementById('importButton').addEventListener('click', (e) => { 
   fileInput.click();
@@ -122,20 +108,13 @@ document.getElementById('csvButton').addEventListener('click', (e) => {
     csvTA.style.display = 'block';
 }, false);
 
-function getFile(event) {
+function getLocalCSVFile(event) {
 	const input = event.target;
   if ('files' in input && input.files.length > 0) {
-    placeFileContent(csvTA, input.files[0]);
+    readFileContent(input.files[0]).then(content => {
+      update3dData(content, null);
+    }).catch(error => console.log(error));
   }
-}
-
-function placeFileContent(target, file) {
-	readFileContent(file).then(content => {
-  	target.value = content;
-    table.fromCSV(content);
-	  model.fromCSV(content);
-    addHistory(content);
-  }).catch(error => console.log(error));
 }
 
 function readFileContent(file) {
@@ -182,14 +161,12 @@ document.querySelector('#addButton').addEventListener('click', (event) => {
 
 document.querySelector('#deleteButton').addEventListener('click', (event) => {
   table.deleteSelectedRow();
-  csvTA.value = table.asCSV();
-  update3dData(csvTA.value);
+  update3dData(table.asCSV(), table);
 });
 
 document.querySelector('#copyButton').addEventListener('click', (event) => {
   table.copySelectedRow();
-  csvTA.value = table.asCSV();
-  update3dData(csvTA.value);
+  update3dData(table.asCSV(), table);
 });
 
 document.querySelector('#snapButton').addEventListener('click', (event) => {
@@ -256,7 +233,7 @@ function getBOMText() {
 }
 
 csvTA.onkeyup = (e) => {
-  update3dData(csvTA.value); 
+  update3dData(csvTA.value, csvTA); 
   if(e.keyCode === 32 && e.ctrlKey) 
     csvTA.lineComplete();
 }
@@ -269,13 +246,16 @@ csvTA.onkeydown = (e) => {
 }
 
 csvTA.addEventListener('click', () => {
-  update3dData(csvTA.value);
+  update3dData(csvTA.value, csvTA);
 });
 
-function update3dData(csvStr) {
-  addHistory(csvStr);
+function update3dData(csvStr, source) {
+  addHistory(csvStr)
   model.fromCSV(csvStr);
-  table.fromCSV(csvStr);
+  if(source !== table)
+    table.fromCSV(csvStr);
+  if(source !== csvTA)
+    csvTA.value = csvStr;
   updateSelection();
 }
 
@@ -285,8 +265,17 @@ function updateSelection() {
     model.highlightRow(row);  
 }
 
-/** History is written by the victors. */
-function addHistory(csvStr) {
+const debounce = (func, delay) => {
+  let debounceTimer;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  }
+}
+
+const addHistory = debounce(function(csvStr) {
   if(history[history.length] > 0 && history[history.length].trim() === csvStr.trim())
     return;
   undoButton.disabled = false;
@@ -295,7 +284,7 @@ function addHistory(csvStr) {
   history.push(csvStr);
   if(history.length > 100)
     history = history.splice(-1);
-}
+}, 250);
 
 /** The past is never where you think you left it */
 function undo() {
@@ -304,8 +293,7 @@ function undo() {
     undoButton.disabled = true;
   future.push(lastState);
   redoButton.disabled = false;
-  model.fromCSV(lastState);
-  table.fromCSV(lastState);
+  setCSV(history[history.length -1]);
   updateSelection();
 }
 
@@ -319,11 +307,15 @@ function redo() {
     undoButton.disabled = false;
   }
   history.push(lastState);
-  model.fromCSV(lastState);
-  table.fromCSV(lastState);
+  setCSV(lastState);
   updateSelection();
 }
 
+function setCSV(csv) {
+  model.fromCSV(csv);
+  table.fromCSV(csv);
+  csvTA.value = csv;
+}
 
 // let isDown = false;
 // let isDrag = false;
