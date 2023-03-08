@@ -1,5 +1,6 @@
 :root {
-  --slider-bg-color: rgb(140, 140, 140);
+  --slider-track-bg-color: rgb(140, 140, 140);
+  --slider-thumb-bg-color: #529DE1;
 }
 .slider {
   width: 100%;
@@ -11,14 +12,16 @@
 .ticks {
   user-select: none;
   float: left;
-  margin-top: -32px;
+  margin-top: -31px;
   width: 100%;
   display: flex;
 }
 .tick {
-  margin-top: 0;
-  padding-top: 0;
-  font-weight: 800;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
   font-size: 16px;
   color: rgb(180, 180, 180);
   flex-grow: 1;
@@ -26,29 +29,31 @@
 input[type="range"] {
 /*   transform: rotate(270deg); */
   -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
   appearance: none;
   background: transparent;
   cursor: pointer;
-  height: 2rem; 
+  height: 32px; 
   width: 100%;
 }
 input[type="range"]::-webkit-slider-runnable-track {
-  background: var(--slider-bg-color);;
+  background: var(--slider-track-bg-color);
   border-radius: 10px;
-  height: 0.5rem;
+  height: 8px;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  border: 0;
-  border-radius: 24px;
-  background: green;
-  width: 24px;
-  height: 24px;
-  margin-top: -8px;
+  border: 2px solid #444444;
+  border-radius: 22px;
+  background: var(--slider-thumb-bg-color);
+  width: 34px;
+  height: 22px;
+  margin-top: -7px;
 }
 input[type="range"]:disabled::-webkit-slider-thumb {
-  background: var(--slider-bg-color);
+  background: var(--slider-track-bg-color);
   opacity: 1;
 }
 input[type="range"]:disabled::-webkit-slider-runnable-track {
@@ -56,21 +61,21 @@ input[type="range"]:disabled::-webkit-slider-runnable-track {
 }
 
 input[type="range"]::-moz-range-track {
-  background: var(--slider-bg-color);;
+  background: var(--slider-track-bg-color);
   border-radius: 10px;
-  height: 0.5rem;
+  height: 8px;
 }
 input[type="range"]::-moz-range-thumb {
   appearance: none;
-  border: 0;
-  border-radius: 24px;
-  background: green;
-  width: 24px;
-  height: 24px;
-  margin-top: -8px;
+  border: 2px solid #444444;
+  border-radius: 22px;
+  background: var(--slider-thumb-bg-color);
+  width: 34px;
+  height: 22px;
+  margin-top: -7px;
 }
 input[type="range"]:disabled::-moz-range-thumb {
-  background: var(--slider-bg-color);
+  background: var(--slider-track-bg-color);
   opacity: 1;
 }
 input[type="range"]:disabled::-moz-range-track {

@@ -18,7 +18,13 @@ const partSelectEl = document.querySelector('#part-select');
 const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
+const undoButton = document.querySelector('#undoButton');
+const redoButton = document.querySelector('#redoButton');
+
 parts.load(partsLoaded);
+
+let history = []; // History is not the past but a map of the past
+let future = []; // There's no fate but what we make for ourselves
 
 function partsLoaded() {
   let html = '';
@@ -37,27 +43,25 @@ function partsLoaded() {
 }
 
 modelSelectEl.onchange = () => {
-  getCSV(modelSelectEl.value);
+  getCSVFile(modelSelectEl.value);
 };
 
 table.tableBodyEl.addEventListener('update', (e) => {
-  csvTA.value = e.detail.data;
-  model.fromCSV(e.detail.data);
+  update3dData(e.detail.data, table);
 });  
+
 
 const modelBase = './models/';
       
-function getCSV(name) {
+function getCSVFile(name) {
   fetch(modelBase + name)
     .then((response) => response.text())
     .then((text) => {
-      csvTA.value = text;
-      table.fromCSV(text);
-      model.fromCSV(text);
+      update3dData(text, null);
   });
 }
 
-getCSV(modelSelectEl.value);
+getCSVFile(modelSelectEl.value);
 
 window.dlCSV = () => {
   downloadText('model.csv', csvTA.value);
@@ -91,7 +95,7 @@ function downloadText(name, text) {
 }
 
 const fileInput = document.getElementById('input-file');
-fileInput.addEventListener('change', getFile);
+fileInput.addEventListener('change', getLocalCSVFile);
 
 document.getElementById('importButton').addEventListener('click', (e) => { 
   fileInput.click();
@@ -104,19 +108,13 @@ document.getElementById('csvButton').addEventListener('click', (e) => {
     csvTA.style.display = 'block';
 }, false);
 
-function getFile(event) {
+function getLocalCSVFile(event) {
 	const input = event.target;
   if ('files' in input && input.files.length > 0) {
-    placeFileContent(csvTA, input.files[0]);
+    readFileContent(input.files[0]).then(content => {
+      update3dData(content, null);
+    }).catch(error => console.log(error));
   }
-}
-
-function placeFileContent(target, file) {
-	readFileContent(file).then(content => {
-  	target.value = content;
-    table.fromCSV(content);
-	  model.fromCSV(content);
-  }).catch(error => console.log(error));
 }
 
 function readFileContent(file) {
@@ -163,14 +161,12 @@ document.querySelector('#addButton').addEventListener('click', (event) => {
 
 document.querySelector('#deleteButton').addEventListener('click', (event) => {
   table.deleteSelectedRow();
-  csvTA.value = table.asCSV();
-  update3dData(csvTA.value);
+  update3dData(table.asCSV(), table);
 });
 
 document.querySelector('#copyButton').addEventListener('click', (event) => {
   table.copySelectedRow();
-  csvTA.value = table.asCSV();
-  update3dData(csvTA.value);
+  update3dData(table.asCSV(), table);
 });
 
 document.querySelector('#snapButton').addEventListener('click', (event) => {
@@ -179,6 +175,14 @@ document.querySelector('#snapButton').addEventListener('click', (event) => {
 
 document.querySelector('#addDialogButton').addEventListener('click', (event) => {
   table.addPart(partSelectEl.value, parentSelectEl.value);
+});
+
+undoButton.addEventListener('click', (event) => {
+  undo();
+});
+
+redoButton.addEventListener('click', (event) => {
+  redo();
 });
 
 function getBOMText() {
@@ -229,7 +233,7 @@ function getBOMText() {
 }
 
 csvTA.onkeyup = (e) => {
-  update3dData(csvTA.value); 
+  update3dData(csvTA.value, csvTA); 
   if(e.keyCode === 32 && e.ctrlKey) 
     csvTA.lineComplete();
 }
@@ -242,19 +246,81 @@ csvTA.onkeydown = (e) => {
 }
 
 csvTA.addEventListener('click', () => {
-  update3dData(csvTA.value);
+  update3dData(csvTA.value, csvTA);
 });
 
-function update3dData(csvStr) {
+function update3dData(csvStr, source) {
+  addHistory(csvStr)
   model.fromCSV(csvStr);
-  table.fromCSV(csvStr);
+  if(source !== table)
+    table.fromCSV(csvStr);
+  if(source !== csvTA)
+    csvTA.value = csvStr;
+  updateSelection(source);
+}
+
+function updateSelection(source) {
+  let row = -1;
+  if(source === csvTA) {
+    row = csvTA.getCaretRow();
+  }
+  if(row > -1) {
+    model.highlightRow(row);
+    if(source === csvTA) 
+      table.selectCellByCoord(row);
+  }
+}
+
+const debounce = (func, delay) => {
+  let debounceTimer;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => func.apply(context, args), delay);
+  }
+}
+
+const addHistory = debounce(function(csvStr) {
+  if(history[history.length] > 0 && history[history.length].trim() === csvStr.trim())
+    return;
+  undoButton.disabled = false;
+  future = [];
+  redoButton.disabled = true;
+  history.push(csvStr);
+  if(history.length > 100)
+    history = history.splice(-1);
+}, 250);
+
+/** The past is never where you think you left it */
+function undo() {
+  const lastState = history.pop();
+  if(history.length < 1)
+    undoButton.disabled = true;
+  future.push(lastState);
+  redoButton.disabled = false;
+  setCSV(history[history.length -1]);
   updateSelection();
 }
 
-function updateSelection() {
-  const row = csvTA.getCaretRow();
-  if(row > -1) 
-    model.highlightRow(row);  
+/** Those who do not remember the past are condemned to repeat it. */
+function redo() {
+  if(future.length < 1)
+    return;
+  const lastState = future.pop();
+  if(future.length < 1) {
+    redoButton.disabled = true;
+    undoButton.disabled = false;
+  }
+  history.push(lastState);
+  setCSV(lastState);
+  updateSelection();
+}
+
+function setCSV(csv) {
+  model.fromCSV(csv);
+  table.fromCSV(csv);
+  csvTA.value = csv;
 }
 
 // let isDown = false;
