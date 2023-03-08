@@ -237,7 +237,7 @@ export function copySelectedRow() {
   var newRowEl = tableBodyEl.insertRow(row + 1);
   newRowEl.replaceWith(cloneEl);
   setCellAddresses();
-  selectCellByCoord(row + 1, col, true);
+  selectCellByCoord(row + 1, col, false);
 }
 
 function setCellAddresses() {

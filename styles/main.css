@@ -2,6 +2,7 @@ body {
   margin: 0;
   font-family: Verdana, Arial, Helvetica, sans-serif;
   overflow: hidden;
+  background: black;
 }
 dialog {
   max-width: 80vw;
