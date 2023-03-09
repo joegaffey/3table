@@ -22,6 +22,8 @@ const prismGeom = new THREE.ExtrudeGeometry(prismShape, { depth: 100, bevelEnabl
 const boxGeom = new THREE.BoxGeometry(100, 100, 100);
 const sphereGeom = new THREE.SphereGeometry(50, 50, 50, 50);
 const cylinderGeom = new THREE.CylinderGeometry(50, 50, 100, 50);
+const coneGeom = new THREE.ConeGeometry(50, 100, 32);
+const torusGeom = new THREE.TorusGeometry(45, 15, 16, 100);
 
 export const parts = {
   cube: { name: 'Cube', type: "Modeled", geom: boxGeom, color: 0x444444 },
@@ -29,6 +31,8 @@ export const parts = {
   cylinder: { name: 'Cylinder', type: "Modeled", geom: cylinderGeom, color: 0x444444 },
   wedge: { name: 'Wedge', type: "Extruded", geom: wedgeGeom, color: 0x444444, adjust: [1,1,1,0,-50,-50,0,-90,0] },
   prism: { name: 'Prism', type: "Extruded", geom: prismGeom, color: 0x444444, adjust: [1,1,1,0,-50,-50,0,0,90] },
+  cone: { name: 'Cone', type: "Modeled", geom: coneGeom, color: 0x444444 },
+  torus: { name: 'Torus', type: "Modeled", geom: torusGeom, color: 0x444444 },
   8040: { name: '8040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
   4040: { name: '4040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
   c4040: { name: '4040 corner', type: "Modeled", geom: c4040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 2}] },
@@ -38,7 +42,7 @@ export const parts = {
 export const collections = {
   basic: {
     name: 'Basic shapes',
-    parts: ['cube','sphere','cylinder', 'wedge', 'prism']
+    parts: ['cube','sphere','cylinder', 'wedge', 'prism', 'cone', 'torus']
   },
   profile: {
     name: 'Extruded Profile',
