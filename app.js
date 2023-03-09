@@ -28,12 +28,6 @@ let history = []; // History is not the past but a map of the past
 let future = []; // There's no fate but what we make for ourselves
 
 function partsLoaded() {
-  let html = '';
-  Object.keys(parts.parts).forEach(partKey => {
-    html += `<li>"${partKey}": ${parts.parts[partKey].name} (${parts.parts[partKey].type})</li>\n`;
-  });
-  partsHelpEl.innerHTML = html;
-  
   setCollectionOptions();
   setPartOptions(collectionSelectEl.value);  
 }

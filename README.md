@@ -1,6 +1,6 @@
 # 3table
 
-Tabular desgn for 3D.
+Tabular design for 3D.
 
 Check it out [here](https://3table.glitch.me/)!
 
@@ -10,12 +10,10 @@ Each table row represents a model part:
 
 Part, Parent, x, y, z (scale), x, y, z (position), x, y, z (angle)
 
-Currently available parts are listed in the 'Help' dialog.
-
 Parents are an assembly of parts that can also be used as a part.  
 Every part must have a parent assembly. The top level or default assembly can be called anything e.g. "model".
 
-3Table is particularly suited to aluminium profile construction design so some profile parts have been included.
+3Table is well suited to aluminium profile construction design so some profile parts have been included.
 
 Extruded parts are set to 100mm depth by default. Scale the z axis to get the desired length.
 
