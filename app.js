@@ -131,8 +131,20 @@ let loadingCount = 0;
 // renderer.xr.enabled = true;
 // document.body.appendChild(VRButton.createButton(renderer));
 
-const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
+// const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
 
+if(window.location.hash) {
+  const param = window.location.hash.split('=');
+  console.log(param)
+  if(param[0] === '#model')
+    loadModel(param[1]);
+}
+  
+function loadModel(model) {
+  console.log(model + '.csv')
+  modelSelectEl.value = model + '.csv';
+  modelSelectEl.dispatchEvent(new Event('change'));
+}
 
 document.querySelector('#helpButton').addEventListener('click', (event) => {
   helpDialog.showModal();
