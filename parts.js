@@ -35,7 +35,7 @@ export const parts = {
   c8040: { name: '8040 corner', type: "Modeled", geom: c8040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 4}] },
 };
 
-const collections = {
+export const collections = {
   basic: {
     name: 'Basic shapes',
     parts: ['cube','sphere','cylinder', 'wedge', 'prism']
@@ -69,16 +69,16 @@ function loadGeometry(name) {
   );
 }
 
-parts.load = function(callback) {
+export function load(callback) {
   Object.keys(parts).forEach(model => {
-    if(typeof parts[model] !== 'function' && !parts[model].geom) 
+    if(parts[model].name !== 'function' && !parts[model].geom) 
       loadGeometry(model);
   });
   if(callback)
     callback();
 }
 
-parts.getPart = function(name) {
+export function getPart(name) {
   const part = new THREE.Mesh();
   const model = parts[name];
   
@@ -103,5 +103,3 @@ parts.getPart = function(name) {
 
   return part;
 }
-
-export default parts;
