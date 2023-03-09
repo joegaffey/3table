@@ -44,12 +44,12 @@ function partsLoaded() {
 
 modelSelectEl.onchange = () => {
   getCSVFile(modelSelectEl.value);
+  window.location.hash = 'model=' + modelSelectEl.value.split('.')[0]
 };
 
 table.tableBodyEl.addEventListener('update', (e) => {
   update3dData(e.detail.data, table);
 });  
-
 
 const modelBase = './models/';
       
@@ -61,7 +61,19 @@ function getCSVFile(name) {
   });
 }
 
-getCSVFile(modelSelectEl.value);
+if(window.location.hash) {
+  const param = window.location.hash.split('=');
+  console.log(param)
+  if(param[0] === '#model')
+    setModel(param[1]);
+}
+else 
+  getCSVFile(modelSelectEl.value);
+  
+function setModel(model) {
+  modelSelectEl.value = model + '.csv';
+  modelSelectEl.dispatchEvent(new Event('change'));
+}
 
 window.dlCSV = () => {
   downloadText('model.csv', csvTA.value);
@@ -133,18 +145,6 @@ let loadingCount = 0;
 
 // const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
 
-if(window.location.hash) {
-  const param = window.location.hash.split('=');
-  console.log(param)
-  if(param[0] === '#model')
-    loadModel(param[1]);
-}
-  
-function loadModel(model) {
-  console.log(model + '.csv')
-  modelSelectEl.value = model + '.csv';
-  modelSelectEl.dispatchEvent(new Event('change'));
-}
 
 document.querySelector('#helpButton').addEventListener('click', (event) => {
   helpDialog.showModal();
