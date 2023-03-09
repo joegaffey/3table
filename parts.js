@@ -6,21 +6,44 @@ const c4040Shape = new THREE.Shape();
 c4040Shape.lineTo(40, 0);
 c4040Shape.lineTo(0, 40);
 
-const c4040Geom = new THREE.ExtrudeGeometry( c4040Shape, { depth: 40, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 } );
-const c8040Geom = new THREE.ExtrudeGeometry( c4040Shape, { depth: 80, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 } );
+const wedgeShape = new THREE.Shape();
+wedgeShape.lineTo(100, 0);
+wedgeShape.lineTo(0, 100);
+
+const prismShape = new THREE.Shape();
+prismShape.lineTo(100, 50);
+prismShape.lineTo(0, 100);
+
+const c4040Geom = new THREE.ExtrudeGeometry(c4040Shape, { depth: 40, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 } );
+const c8040Geom = new THREE.ExtrudeGeometry(c4040Shape, { depth: 80, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 } );
+const wedgeGeom = new THREE.ExtrudeGeometry(wedgeShape, { depth: 100, bevelEnabled: false });
+const prismGeom = new THREE.ExtrudeGeometry(prismShape, { depth: 100, bevelEnabled: false });
+
 const boxGeom = new THREE.BoxGeometry(100, 100, 100);
 const sphereGeom = new THREE.SphereGeometry(50, 50, 50, 50);
 const cylinderGeom = new THREE.CylinderGeometry(50, 50, 100, 50);
 
-
 export const parts = {
-  "cube": { name: '100mm cube', type: "Modeled", geom: boxGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
-  "sphere": { name: '100mm sphere', type: "Modeled", geom: sphereGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
-  "cylinder": { name: '100mm cylinder', type: "Modeled", geom: cylinderGeom, color: 0x444444, adjust: [1,1,1,0,0,0,0,0,0] },
-  "8040": { name: '8040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
-  "4040": { name: '4040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
-  "c4040": { name: '4040 corner', type: "Modeled", geom: c4040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 2}] },
-  "c8040": { name: '8040 corner', type: "Modeled", geom: c8040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 4}] },
+  cube: { name: 'Cube', type: "Modeled", geom: boxGeom, color: 0x444444 },
+  sphere: { name: 'Sphere', type: "Modeled", geom: sphereGeom, color: 0x444444 },
+  cylinder: { name: 'Cylinder', type: "Modeled", geom: cylinderGeom, color: 0x444444 },
+  wedge: { name: 'Wedge', type: "Extruded", geom: wedgeGeom, color: 0x444444, adjust: [1,1,1,0,-50,-50,0,-90,0] },
+  prism: { name: 'Prism', type: "Extruded", geom: prismGeom, color: 0x444444, adjust: [1,1,1,0,-50,-50,0,0,90] },
+  8040: { name: '8040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
+  4040: { name: '4040 profile', type: "Extruded", geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
+  c4040: { name: '4040 corner', type: "Modeled", geom: c4040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 2}] },
+  c8040: { name: '8040 corner', type: "Modeled", geom: c8040Geom, color: 0x111111, accessories: [{id: "nuts", name: "T-Slot nuts and bolts", count: 4}] },
+};
+
+const collections = {
+  basic: {
+    name: 'Basic shapes',
+    parts: ['cube','sphere','cylinder', 'wedge', 'prism']
+  },
+  profile: {
+    name: 'Extruded Profile',
+    parts: ['8040','4040','c8040','c4040']
+  }
 };
 
 const baseURL = './assets/';
@@ -67,14 +90,15 @@ parts.getPart = function(name) {
   if(model.geom)
     part.geometry = model.geom.clone();
   
-  // part.geometry.center();
   part.material = new THREE.MeshPhongMaterial({ color: model.color });
   
   if(model.adjust) {
     const a = model.adjust;
     part.scale.set(a[0], a[1], a[2]);
     part.geometry.translate(a[3], a[4], a[5]);
-    part.rotation.set(a[6], a[7], a[8]);
+    part.geometry.rotateX(a[6] * (Math.PI / 180));
+    part.geometry.rotateY(a[7] * (Math.PI / 180));
+    part.geometry.rotateZ(a[8] * (Math.PI / 180));
   }
 
   return part;
