@@ -8,7 +8,7 @@ How to design your 3D model...
 
 Each table row represents a model part:  
 
-Name, Parent, x, y, z (scale), x, y, z (position), x, y, z (angle)
+Part, Parent, x, y, z (scale), x, y, z (position), x, y, z (angle)
 
 Currently available parts are listed in the 'Help' dialog.
 

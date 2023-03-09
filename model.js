@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'orbitControls';
 import { STLExporter } from 'STLExporter';
-import { parts } from 'parts';
+import * as parts from 'parts';
 
 let groups = {};
 

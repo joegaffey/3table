@@ -45,6 +45,7 @@
           <option value="profile_cube.csv">Profile Cube</option>          
           <option value="blocks.csv">Blocks</option>
           <option value="rig.csv">Sim Rig</option>
+          <option value="suburb.csv">Suburb</option>
         </select>
         <button id="expButton" class="ui-btn">File</button>  
         <button id="listButton" class="ui-btn">BOM</button>
@@ -160,13 +161,21 @@
     <dialog id="addDialog">
       <h3>Add Part</h3>
       <p>
-        Select a part<br/>
-        <select name="partSelect" id="part-select"></select>
+        Select collection<br/>
+        <select name="collectionSelect" id="collection-select" style="width: 100%"></select>
       </p>
       <p>
-        Set the parent<br/>
-        <select name="parentSelect" id="parent-select"></select>
+        Select part<br/>
+        <select name="partSelect" id="part-select" style="width: 100%"></select>
       </p>
+      <p>
+        Select parent<br/>
+        <select name="parentSelect" id="parent-select" style="width: 100%"></select>
+      </p>
+<!--       <p>
+        Or add a new parent<br/>
+        <input name="parentInput" id="parent-input" style="width: 100%">
+      </p> -->
       <form class="close" method="dialog">
         <button id="addDialogButton" class="ui-btn green">Add</button>
         <button class="ui-btn blue">Cancel</button>

@@ -2,7 +2,7 @@
 
 import * as model from 'model';
 import * as table from '3DTable';
-import parts from 'parts';
+import * as parts from 'parts';
 import csvTA from 'CSVTextArea';
 
 // const loaderEl = document.querySelector('.loader');
@@ -15,6 +15,7 @@ const addDialog = document.querySelector('#addDialog');
 const partsHelpEl = document.querySelector('#partsUl');
 const modelSelectEl = document.querySelector('#model-select');
 const partSelectEl = document.querySelector('#part-select');
+const collectionSelectEl = document.querySelector('#collection-select');
 const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
@@ -28,28 +29,46 @@ let future = []; // There's no fate but what we make for ourselves
 
 function partsLoaded() {
   let html = '';
-  Object.keys(parts).forEach(model => {
-    if(typeof parts[model] !== 'function')
-      html += `<li>"${model}": ${parts[model].name} (${parts[model].type})</li>\n`;
+  Object.keys(parts.parts).forEach(partKey => {
+    html += `<li>"${partKey}": ${parts.parts[partKey].name} (${parts.parts[partKey].type})</li>\n`;
   });
   partsHelpEl.innerHTML = html;
   
-  html = '';  
-  Object.keys(parts).forEach(model => {
-    if(typeof parts[model] !== 'function')
-      html += `<option value="${model}">"${model}": ${parts[model].name} (${parts[model].type})</option>\n`;
+  setCollectionOptions();
+  setPartOptions(collectionSelectEl.value);  
+}
+
+function setCollectionOptions() {
+  let html = '';  
+  Object.keys(parts.collections).forEach(collection => {
+    html += `<option value="${collection}">${parts.collections[collection].name}</option>\n`;
+  });
+  collectionSelectEl.innerHTML = html;
+}
+
+function setPartOptions(collection) {
+  let html = ''; 
+  const collectionParts = parts.collections[collection].parts;
+  
+  collectionParts.forEach(partKey => {
+    const part = parts.parts[partKey];
+    html += `<option value="${partKey}">${partKey} - ${part.name}</option>\n`;
   });
   partSelectEl.innerHTML = html;
 }
 
 modelSelectEl.onchange = () => {
   getCSVFile(modelSelectEl.value);
+  window.location.hash = 'model=' + modelSelectEl.value.split('.')[0]
+};
+
+collectionSelectEl.onchange = () => {
+  setPartOptions(collectionSelectEl.value);
 };
 
 table.tableBodyEl.addEventListener('update', (e) => {
   update3dData(e.detail.data, table);
 });  
-
 
 const modelBase = './models/';
       
@@ -61,7 +80,18 @@ function getCSVFile(name) {
   });
 }
 
-getCSVFile(modelSelectEl.value);
+if(window.location.hash) {
+  const param = window.location.hash.split('=');
+  if(param[0] === '#model')
+    setModel(param[1]);
+}
+else 
+  getCSVFile(modelSelectEl.value);
+  
+function setModel(model) {
+  modelSelectEl.value = model + '.csv';
+  modelSelectEl.dispatchEvent(new Event('change'));
+}
 
 window.dlCSV = () => {
   downloadText('model.csv', csvTA.value);
@@ -131,7 +161,7 @@ let loadingCount = 0;
 // renderer.xr.enabled = true;
 // document.body.appendChild(VRButton.createButton(renderer));
 
-const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
+// const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
 
 
 document.querySelector('#helpButton').addEventListener('click', (event) => {
