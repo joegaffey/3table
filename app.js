@@ -220,10 +220,10 @@ function getBOMText() {
   let accessories = {};
   const meshes = model.getAllMeshInstances();
   meshes.forEach(mesh => {
-    const part = parts[mesh.name];
+    const part = parts.parts[mesh.name];
     list += part.name;
     if(part.type === 'Extruded')
-      list += ` (${mesh.userData.scaleZ}mm)\n`;
+      list += ` (${mesh.userData.scaleZ * 100}mm)\n`;
     else if(mesh.scale.x !== 1 || mesh.scale.y !== 1 || mesh.scale.z !== 1) 
       list += ` (scaled)\n`;
     else 
@@ -232,7 +232,7 @@ function getBOMText() {
 
   const partNames = model.getAllMeshProps('name');
   partNames.forEach(name => {
-    const part = parts[name];
+    const part = parts.parts[name];
     if(part && part.accessories) {
       part.accessories.forEach(acc => {
       if(accessories[acc.id]) {
