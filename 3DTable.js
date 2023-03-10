@@ -1,12 +1,21 @@
 import * as model from 'model';
 
 export const tableBodyEl = document.querySelector('.spec-table > tbody');
+const tableEl = document.querySelector('.spec-table');
 const valSliderEl = document.querySelector('.val-slider');
 const ticksEl = document.querySelector('.ticks');
 
 tableBodyEl.oninput = (e) => { 
   valSliderEl.value = e.target.textContent.trim();
   sendUpdate();
+}
+
+export function show() {
+  tableEl.style.display = 'block';
+}
+
+export function hide() {
+  tableEl.style.display = 'none';
 }
 
 let selectedCell = null;
