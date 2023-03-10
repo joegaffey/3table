@@ -1,12 +1,21 @@
 import * as model from 'model';
 
 export const tableBodyEl = document.querySelector('.spec-table > tbody');
+const tableEl = document.querySelector('.spec-table');
 const valSliderEl = document.querySelector('.val-slider');
 const ticksEl = document.querySelector('.ticks');
 
 tableBodyEl.oninput = (e) => { 
   valSliderEl.value = e.target.textContent.trim();
   sendUpdate();
+}
+
+export function show() {
+  tableEl.style.display = 'block';
+}
+
+export function hide() {
+  tableEl.style.display = 'none';
 }
 
 let selectedCell = null;
@@ -61,6 +70,7 @@ function selectCell(el, focus) {
 }
 
 function disableSlider() {
+  valSliderEl.value = 0;
   valSliderEl.disabled = true;
   ticksEl.style.opacity = 0;
 }
@@ -69,11 +79,10 @@ function enableSlider() {
   valSliderEl.disabled = false;
   ticksEl.style.opacity = 1;
 }
-      
 
-export function selectCellByCoord(row, col, focus) {
-  if(!col && selectedCell)
-     col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
+export function selectCellByCoord(row, col = -1, focus = false) {
+  if(col < 0 && selectedCell)
+    col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
   const rowEl = tableBodyEl.rows[row];
   if(!rowEl)
     return;

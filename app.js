@@ -19,6 +19,8 @@ const collectionSelectEl = document.querySelector('#collection-select');
 const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
+
+const csvButton = document.getElementById('csvButton');
 const undoButton = document.querySelector('#undoButton');
 const redoButton = document.querySelector('#redoButton');
 
@@ -125,11 +127,17 @@ document.getElementById('importButton').addEventListener('click', (e) => {
   fileInput.click();
 }, false);
 
-document.getElementById('csvButton').addEventListener('click', (e) => { 
-  if(csvTA.style.display === 'block')
+csvButton.addEventListener('click', (e) => { 
+  if(csvTA.style.display === 'block') {
+    csvButton.innerText = 'CSV';
     csvTA.style.display = 'none';
-  else
+    table.show();
+  }
+  else {
+    csvButton.innerText = 'Table';
+    table.hide();
     csvTA.style.display = 'block';
+  }
 }, false);
 
 function getLocalCSVFile(event) {
@@ -258,6 +266,8 @@ function getBOMText() {
 
 csvTA.onkeyup = (e) => {
   update3dData(csvTA.value, csvTA); 
+  const cellCoord = csvTA.getCaretAddress();
+  table.selectCellByCoord(cellCoord[0], cellCoord[1], false);
   if(e.keyCode === 32 && e.ctrlKey) 
     csvTA.lineComplete();
 }
@@ -270,6 +280,8 @@ csvTA.onkeydown = (e) => {
 }
 
 csvTA.addEventListener('click', () => {
+  const cellCoord = csvTA.getCaretAddress();
+  table.selectCellByCoord(cellCoord[0], cellCoord[1], false);
   update3dData(csvTA.value, csvTA);
 });
 
