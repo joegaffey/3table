@@ -70,6 +70,7 @@ function selectCell(el, focus) {
 }
 
 function disableSlider() {
+  valSliderEl.value = 0;
   valSliderEl.disabled = true;
   ticksEl.style.opacity = 0;
 }
@@ -78,11 +79,10 @@ function enableSlider() {
   valSliderEl.disabled = false;
   ticksEl.style.opacity = 1;
 }
-      
 
-export function selectCellByCoord(row, col, focus) {
-  if(!col && selectedCell)
-     col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
+export function selectCellByCoord(row, col = -1, focus = false) {
+  if(col < 0 && selectedCell)
+    col = JSON.parse(selectedCell.attributes['data-address'].value)[1];
   const rowEl = tableBodyEl.rows[row];
   if(!rowEl)
     return;
