@@ -5,6 +5,54 @@ const tableEl = document.querySelector('.spec-table');
 const valSliderEl = document.querySelector('.val-slider');
 const ticksEl = document.querySelector('.ticks');
 
+const arrow = {
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40
+};
+
+tableBodyEl.addEventListener('keydown', e => {
+  if (!Object.values(arrow).includes(e.which)) {
+    return;
+  }
+
+  const currentAddress = JSON.parse(selectedCell.attributes['data-address'].value);
+  let newAddress = currentAddress;
+  switch (e.which) {
+    case arrow.left: {
+      if(currentAddress[1] > 0) {
+        newAddress = [currentAddress[0], currentAddress[1] - 1];
+      }
+      break;
+    }
+    case arrow.right: {
+      if(currentAddress[1] < 12) {
+        newAddress = [currentAddress[0], currentAddress[1] + 1];
+      }
+      break;
+    }
+    case arrow.up: {
+      if(currentAddress[0] > 0) {
+        newAddress = [currentAddress[0] - 1, currentAddress[1]];
+      }
+      break;
+    }
+    case arrow.down: {
+      if(currentAddress[0] < tableBodyEl.rows.length) {
+        newAddress = [currentAddress[0] + 1, currentAddress[1]];
+      }
+      break;
+    }
+  }
+  
+  if(newAddress !== currentAddress) {
+    selectCellByCoord(newAddress[0], newAddress[1], true);
+    e.preventDefault();
+  }
+
+});
+
 tableBodyEl.oninput = (e) => { 
   valSliderEl.value = e.target.textContent.trim();
   sendUpdate();
