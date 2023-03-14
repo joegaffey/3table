@@ -3,6 +3,7 @@ body {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   overflow: hidden;
   background: black;
+  animation: fadein 0.4s linear forwards;
 }
 h3 {
   font-size: 1.1em;
@@ -35,6 +36,9 @@ dialog {
   outline: 3px solid #555555;
   outline-offset: -5px;
   padding-top: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  animation: fadein 0.2s linear forwards;
 }
 dialog:not([open]) {
   display: none;
@@ -44,6 +48,18 @@ footer form {
   flex-direction: row;
   justify-content: center;
   gap: 8px;
+}
+@keyframes fadein {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeout {
+  0% { opacity: 0; }
+  100% {opacity: 1; }
+}
+.fadeout {
+  animation: fadeout 0.15s linear forwards;
+  animation-delay: calc(var(--index) * 100ms);
 }
 .dialog-body {
   flex: 1;
@@ -102,19 +118,18 @@ footer form {
   text-align: center;
 }
 .loader {       
-  font-size: 24px;
-  height: auto;
-  width: 250px;
-  border-radius: 4px;
-  outline: 3px solid #555555;
-  outline-offset: -5px;
   position: absolute;
-  top: calc(50% - 50px);
-  left: calc(50% - 125px);
-  text-align: center;
-  padding: 30px 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  padding: 0;
+  margin: 0;
   background-color: #222222;
-  color: lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .gui-container {
   position: absolute;
@@ -162,4 +177,7 @@ footer form {
 }
 #partsUl li {
   list-style-type: none;
+}
+#guiContainer{
+  padding-top: 12px;
 }
