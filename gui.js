@@ -1,12 +1,14 @@
 import * as model from 'model';
 
 const gui = new dat.GUI({ autoPlace: false });
-gui.domElement.id = 'guiContainer';
+
+gui.domElement.id = 'guiContain';
 document.querySelector('#guiContainer').appendChild(gui.domElement);
-gui.close();
 
 const sceneGUI = gui.addFolder('Scene');
-sceneGUI.add(model.sceneConfig, 'wireframe').name('X-Ray').onChange((value) => { model.setXRay(value); });;
+sceneGUI.add(model.sceneConfig, 'size', 1000, 5000, 1000).name('Size').onChange((value) => { model.setSize(value); });
+sceneGUI.add(model.sceneConfig, 'gridOn').name('Grid').onChange((value) => { model.showGrid(value); });
+sceneGUI.add(model.sceneConfig, 'wireframe').name('X-Ray').onChange((value) => { model.setXRay(value); });
 sceneGUI.add(model.sceneConfig.xrayMaterial, 'opacity', 0.1, 0.5, 0.01).name('X-Ray Opacity');
 sceneGUI.add(model.aLight, 'intensity', 0, 20, 0.1).name('Ambient Light');
 

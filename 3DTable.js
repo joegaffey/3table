@@ -161,6 +161,9 @@ export function toggleSnap() {
 }
 
 function setSliderRange(col) {
+  let scaled = model.size;
+  if(model.size > 3000)
+    scaled = model.size / 2;
   if(col < 5) {
     valSliderEl.max = model.size / 100;
     valSliderEl.min = 0;
@@ -178,7 +181,7 @@ function setSliderRange(col) {
     valSliderEl.min = model.size / -2;
     if(snapOn) {
       valSliderEl.step = 50;
-      setTicks(model.size / valSliderEl.step);
+      setTicks(scaled / valSliderEl.step);
     }
     else {
       valSliderEl.step = 1;
@@ -252,13 +255,13 @@ export function fromCSV(csv) {
   tableBodyEl.innerHTML = html;
 }
 
-export function addPart(part, parent) {
+export function addPart(part, group) {
   let row = -1;
   if(selectedCell) {
     row = JSON.parse(selectedCell.attributes['data-address'].value)[0] + 1;
   }
   const rowEl = tableBodyEl.insertRow(row);
-  [part,parent,1,1,1,0,0,0,0,0,0].map((val, i) => { 
+  [part,group,1,1,1,0,0,0,0,0,0].map((val, i) => { 
     const cell = rowEl.insertCell(i);
     cell.innerHTML = val;
   });

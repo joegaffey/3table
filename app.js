@@ -11,6 +11,7 @@ const plDialog = document.querySelector('#plDialog');
 const helpDialog = document.querySelector('#helpDialog');
 const exportDialog = document.querySelector('#exportDialog');
 const addDialog = document.querySelector('#addDialog');
+const settingsDialog = document.querySelector('#settingsDialog');
 
 const partsHelpEl = document.querySelector('#partsUl');
 const modelSelectEl = document.querySelector('#model-select');
@@ -19,8 +20,9 @@ const collectionSelectEl = document.querySelector('#collection-select');
 const parentSelectEl = document.querySelector('#parent-select');
 const plTextEl = document.querySelector('#plText');
 
-
 const csvButton = document.getElementById('csvButton');
+const settingsButton = document.querySelector('#settingsButton');
+
 const undoButton = document.querySelector('#undoButton');
 const redoButton = document.querySelector('#redoButton');
 
@@ -177,6 +179,10 @@ document.querySelector('#expButton').addEventListener('click', (event) => {
 document.querySelector('#listButton').addEventListener('click', (event) => {
   plTextEl.innerText = getBOMText();
   plDialog.showModal();
+});
+
+settingsButton.addEventListener('click', (event) => {
+  settingsDialog.showModal();
 });
 
 document.querySelector('#addButton').addEventListener('click', (event) => {

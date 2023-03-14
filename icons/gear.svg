@@ -1,0 +1,19 @@
+<svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="holes">
+      <circle cx="220" cy="220" fill="white" r="220"/>
+      <circle cx="220" cy="220" fill="black" r="80"/>
+      <circle cx="222" cy="0" fill="black" r="48"/>
+      <circle cx="222" cy="438" fill="black" r="48"/>
+      <circle cx="0" cy="222" fill="black" r="48"/>
+      <circle cx="438" cy="222" fill="black" r="48"/>
+      <circle cx="372" cy="372" fill="black" r="48"/>
+      <circle cx="68" cy="372" fill="black" r="48"/>
+      <circle cx="68" cy="68" fill="black" r="48"/>
+      <circle cx="372" cy="68" fill="black" r="48"/>
+    </mask>
+  </defs>
+  <g transform="rotate(22.5, 220, 220)">
+    <circle cx="220" cy="220" r="220" fill="rgb(180, 180, 180)" mask="url(#holes)"/>
+  </g>
+</svg>

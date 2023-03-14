@@ -8,11 +8,31 @@ let groups = {};
 const scene = new THREE.Scene();
 export const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000);
 
-export const size = 2000;
-const divisions = size / 100;
+export let size = 2000;
+let divisions = size / 100;
 
-const gridHelper = new THREE.GridHelper( size, divisions );
-scene.add( gridHelper );
+let gridHelper = new THREE.GridHelper(size, divisions);
+scene.add(gridHelper);
+
+export function showGrid(on) {
+  if(on && !scene.getObjectById(gridHelper.id)) {
+    sceneConfig.gridOn = true;
+    scene.add(gridHelper);
+  }
+  else {
+    sceneConfig.gridOn = false;
+    scene.remove(gridHelper);
+  }
+}
+
+export function setSize(s) {
+  size = sceneConfig.size = s; // Sceneconfig appears to be required by DAT.GUI
+  divisions = size / 100;
+  rebuild();
+  scene.remove(gridHelper);
+  gridHelper = new THREE.GridHelper(size, divisions);
+  scene.add(gridHelper);
+}
 
 export const aLight = new THREE.AmbientLight(0x404040, 3);
 scene.add(aLight);
@@ -50,18 +70,20 @@ const selectedMaterial = new THREE.MeshPhongMaterial({
 });
 
 export const sceneConfig = {
+  size: 2000,
   wireframe: false,
+  gridOn: true,
   xrayMaterial: xrayMaterial,
 };
 
 export const cams = {
-  oblLeft: { name: 'Oblique Left', pos: [-1000, 1000, 1000], target: [0, 0, 0] },
-  oblRight: { name: 'Oblique Right', pos: [1000, 1000, 1000], target: [0, 0, 0] },
+  front: { name: 'Front', pos: [0, 500, 1500], target: [0, 0, 0] },
+  back: { name: 'Back', pos: [0, 500, -1500], target: [0, 0, 0] },
+  top: { name: 'Top', pos: [0, 1500, 10], target: [0, 0, 0] },
   left: { name: 'Left', pos: [-1500, 500, 0], target: [0, 0, 0] },
   right: { name: 'Right', pos: [1500, 500, 0], target: [0, 0, 0] },
-  top: { name: 'Top', pos: [0, 1500, 10], target: [0, 0, 0] },
-  front: { name: 'Front', pos: [0, 500, -1500], target: [0, 0, 0] },
-  back: { name: 'Back', pos: [0, 500, 1250], target: [0, 0, 0] }
+  oblLeft: { name: 'Oblique Left', pos: [-1000, 1000, 1000], target: [0, 0, 0] },
+  oblRight: { name: 'Oblique Right', pos: [1000, 1000, 1000], target: [0, 0, 0] }
 };
 setCamera(Object.values(cams)[0]);
 
