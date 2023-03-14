@@ -368,7 +368,7 @@ function setCSV(csv) {
 }
 
 function showLoader() {
-  loaderEl.style.display = 'block';  
+  loaderEl.style.display = 'flex';  
 }
 
 function hideLoader() {
