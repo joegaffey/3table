@@ -4,22 +4,49 @@ body {
   overflow: hidden;
   background: black;
 }
-dialog {
-  max-width: 80vw;
-  border-radius: 6px;
-  background-color: rgb(200, 200, 200);
-  border: none;
-  outline: 3px solid #555555;
-  outline-offset: -5px;
-  padding-top: 0px;
+h3 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+h4 {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 12px;
+  margin-bottom: 8px;
 }
 textarea {
   resize: none;
   overflow: auto;
 }
-h3 {
-  font-size: 16px;
-  font-weight: 600;
+dialog {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-size: 0.8em;
+  font-weight: 400;
+  color: #dddddd;
+  max-width: 80vw;
+  min-width: 200px;
+  min-height: 150px;
+  border-radius: 6px;
+  background-color: #222222;
+  border: none;
+  outline: 3px solid #555555;
+  outline-offset: -5px;
+  padding-top: 0px;
+}
+dialog:not([open]) {
+  display: none;
+}
+footer form {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+}
+.dialog-body {
+  flex: 1;
 }
 .hide {
   display: none;
@@ -32,6 +59,7 @@ h3 {
   padding-left: 4px;
 }
 .ui-btn {
+  font-size: 1em;
   user-select: none;
   border: 0;
   outline: 0;
@@ -90,10 +118,10 @@ h3 {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 16px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   width: 480px;
-  max-width: calc(100vw - 30px);
+  max-width: calc(100vw - 24px);
   resize: both;
   padding: 4px;
   border-radius: 4px;
@@ -122,10 +150,8 @@ h3 {
 .close {
   padding-top: 24px;
 }
-#guiContainer{
-  position: absolute;
-  bottom: 12px;
-  left: 0;
+.close-button {
+  display: none; 
 }
 #partsUl {
   overflow-y: auto;

@@ -29,9 +29,6 @@
     <script async type="module" src="./gui.js"></script>
   </head>
   <body>
-    <div class="warning">
-      WARNING: EXPERIMENTAL!
-    </div>
     <div class="loader">
       Loading...
     </div>
@@ -50,6 +47,9 @@
         <button id="expButton" class="ui-btn">File</button>  
         <button id="listButton" class="ui-btn">BOM</button>
         <button id="csvButton" class="ui-btn">CSV</button>
+        <button id="settingsButton" class="img-btn">
+          <img src="./icons/gear.svg" alt="Settings">
+        </button>
       </div>
       <table class="spec-table">
         <thead>
@@ -62,7 +62,7 @@
           </tr>
           <tr class="bottom-thead">
             <th>Part</th>
-            <th>Parent</th>
+            <th>Group</th>
             <th>X</th>
             <th>Y</th>
             <th>Z</th>
@@ -95,7 +95,7 @@
         </button>
         <button id="redoButton" class="img-btn" disabled>
           <img src="./icons/redo.svg" alt="Redo"> 
-        </button>   
+        </button> 
         <!--    
         <span class="snap">0</span>
         <button id="upButton" class="img-btn">
@@ -113,51 +113,66 @@
     </div>
        
     <dialog id="helpDialog">
-      <h3>How to design your 3D model</h3>
-      <p>Each row represents a model part as follows:</p>
-      <p>Part, Parent, x, y, z (scale), x, y, z (position), x, y, z (angle)</p>
-      <p>
-        Parents are an assembly of parts that can also be used as a part.
-        Every part must have a parent assembly.
-        The top level or default assembly can be called anything e.g. "model".
-      </p> 
-      <p>3Table is well suited to aluminium profile construction so some profile parts have been included.</p>
-      <p>Extruded parts are set to 100mm depth by default. Scale the z axis to get the desired length.</p>
-      <p>The model can be edited in the table by clicking the cell or by changing the CSV (Comma Separated Values) text.</p>
-      <p>If editing the CSV text use a '#' at the start of the line to hide a part.</p>  
-      <form method="dialog">
-        <button class="ui-btn green">Close</button>
-      </form>
+      <header>
+        <h3>How to make your 3D model</h3>
+      </header>
+      <section class="dialog-body">
+        <p>Each table row represents a model part.</p>
+        <p>Use the controls below the table to add, remove and copy parts.</p>
+        <p>Groups are a special type of part that is made up of other parts</p>
+        <p>Every part must be in a group. The top level or default group can be called anything e.g. "model".</p> 
+        <p>3Table is well suited to aluminium profile construction so some profile parts have been included.</p>
+        <p>Extruded parts are set to 100mm depth by default. Scale the z axis to get the desired length.</p>
+        <p>The model can be edited in the table by clicking the cell or by changing the CSV (Comma Separated Values) text.</p>
+      </section>
+      <footer>
+        <form method="dialog">
+          <button class="ui-btn green">Close</button>
+        </form>
+      </footer>
     </dialog>
   
     <dialog id="plDialog">
-      <h3>Bill Of Material</h3>
-      <p id="plText"></p>
-      <form method="dialog">
-        <button class="ui-btn blue">Close</button>
-        <button class="ui-btn green" onclick="dlParts()">Save</button>
-      </form>
+      <header>
+        <h3>Bill Of Material</h3>
+      </header>
+      <section class="dialog-body">
+        <p id="plText"></p>
+      </section>
+      <footer>
+        <form method="dialog">
+          <button class="ui-btn blue">Close</button>
+          <button class="ui-btn green" onclick="dlParts()">Save</button>
+        </form>
+      </footer>
     </dialog>
 
     <dialog id="exportDialog">
-      <h3>Import</h3>
-      <div class="vButtons">
-        <button class="ui-btn blue" id="importButton">CSV File</button>
-        <input type="file" id="input-file" accept=".csv" hidden>
-      </div>
-      <h3>Export</h3>
-      <div class="vButtons">
-        <button class="ui-btn blue" onclick="dlCSV()">CSV File</button>
-        <button class="ui-btn blue" onclick="dlParts()">BOM (txt)</button>
-        <button class="ui-btn blue" onclick="dlSTL()">3D Model (STL)</button>
-      </div>
-      <form class="close" method="dialog">
-        <button class="ui-btn green">Close</button>
-      </form>
+      <header>
+        <h3>File</h3>
+      </header>
+      <section class="dialog-body">
+        <h4>Import</h4>
+        <div class="vButtons">
+          <button class="ui-btn blue" id="importButton">CSV File</button>
+          <input type="file" id="input-file" accept=".csv" hidden>
+        </div>
+        <h4>Export</h4>
+        <div class="vButtons">
+          <button class="ui-btn blue" onclick="dlCSV()">CSV File</button>
+          <button class="ui-btn blue" onclick="dlParts()">BOM (txt)</button>
+          <button class="ui-btn blue" onclick="dlSTL()">3D Model (STL)</button>
+        </div>
+      </section>
+      <footer>
+        <form class="close" method="dialog">
+          <button class="ui-btn green">Close</button>
+        </form>
+      </footer>
     </dialog>
   
     <dialog id="addDialog">
-      <h3>Add Part</h3>
+      <header><h3>Add Part</h3></header>
       <p>
         Select collection<br/>
         <select name="collectionSelect" id="collection-select" style="width: 100%"></select>
@@ -174,12 +189,24 @@
         Or add a new parent<br/>
         <input name="parentInput" id="parent-input" style="width: 100%">
       </p> -->
-      <form class="close" method="dialog">
-        <button id="addDialogButton" class="ui-btn green">Add</button>
-        <button class="ui-btn blue">Cancel</button>
-      </form>
+      <footer>
+        <form class="close" method="dialog">
+          <button id="addDialogButton" class="ui-btn green">Add</button>
+          <button class="ui-btn blue">Cancel</button>
+        </form>
+      </footer>
     </dialog>
-  
-    <div id="guiContainer"></div>
+    
+    <dialog id="settingsDialog">
+      <header><h3>Settings</h3></header>
+      <section class="dialog-body">
+        <div id="guiContainer"></div>
+      </section>
+      <footer>
+        <form class="close" method="dialog">
+          <button class="ui-btn green">Close</button>
+        </form>
+      </footer>
+    </dialog>
   </body>
 </html>
