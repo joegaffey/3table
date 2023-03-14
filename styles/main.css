@@ -103,9 +103,11 @@ footer form {
 }
 .loader {       
   font-size: 24px;
-  display: none;
   height: auto;
   width: 250px;
+  border-radius: 4px;
+  outline: 3px solid #555555;
+  outline-offset: -5px;
   position: absolute;
   top: calc(50% - 50px);
   left: calc(50% - 125px);

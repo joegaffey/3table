@@ -5,7 +5,7 @@ import * as table from '3DTable';
 import * as parts from 'parts';
 import csvTA from 'CSVTextArea';
 
-// const loaderEl = document.querySelector('.loader');
+const loaderEl = document.querySelector('.loader');
 
 const plDialog = document.querySelector('#plDialog');
 const helpDialog = document.querySelector('#helpDialog');
@@ -71,11 +71,13 @@ table.tableBodyEl.addEventListener('update', (e) => {
 const modelBase = './models/';
       
 function getCSVFile(name) {
+  showLoader();
   fetch(modelBase + name)
     .then((response) => response.text())
     .then((text) => {
       update3dData(text, null);
-  });
+      hideLoader();
+    });
 }
 
 if(window.location.hash) {
@@ -363,6 +365,14 @@ function setCSV(csv) {
   model.fromCSV(csv);
   table.fromCSV(csv);
   csvTA.value = csv;
+}
+
+function showLoader() {
+  loaderEl.style.display = 'block';  
+}
+
+function hideLoader() {
+  loaderEl.style.display = 'none';  
 }
 
 // let isDown = false;
