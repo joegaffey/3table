@@ -10,7 +10,7 @@ Each table row represents a model part.
 
 Use the controls below the table to add, remove and copy parts.
 
-Groups are a special type of part that is made up of ther parts
+Groups are a special type of part that is made up of other parts
 
 Every part must be in a group. The top level or default group can be called anything e.g. "model".
 
