@@ -164,9 +164,6 @@ function readFileContent(file) {
 
 let loadingCount = 0;
 
-// renderer.xr.enabled = true;
-// document.body.appendChild(VRButton.createButton(renderer));
-
 // const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
 
 
@@ -368,11 +365,34 @@ function setCSV(csv) {
 }
 
 function showLoader() {
+  loaderEl.classList.remove('fadeout');
+  loaderEl.classList.add('fadein');
   loaderEl.style.display = 'flex';  
 }
 
 function hideLoader() {
-  loaderEl.style.display = 'none';  
+  loaderEl.classList.remove('fadein');
+  loaderEl.classList.add('fadeout');
+  setTimeout(() => {
+    loaderEl.style.display = 'none';    
+  }, 200);
+}
+
+document.querySelectorAll('dialog').forEach(dialog => {
+  dialog.addEventListener('click', (e) => {
+    if (e.target.parentElement.nodeName === 'FORM') {
+      softCloseDialog(dialog);
+      e.preventDefault();
+    }
+  });
+});
+
+function softCloseDialog(dialog) {
+  dialog.classList.add('fadeout');
+  setTimeout(() => {
+    dialog.close();
+    dialog.classList.remove('fadeout');
+  }, 200);
 }
 
 // let isDown = false;
