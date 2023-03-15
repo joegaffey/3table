@@ -24,7 +24,7 @@ dialog {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  font-size: 0.8em;
+  font-size: 0.9em;
   font-weight: 400;
   color: #dddddd;
   max-width: 80vw;
@@ -41,7 +41,18 @@ dialog {
   animation: fadein 0.2s linear forwards;
 }
 dialog:not([open]) {
+  animation: fadeout 0.2s linear forwards;
   display: none;
+}
+dialog::backdrop {
+  animation: fadein 0.2s linear forwards;
+  background-color: rgba(0,0,0, 0.6);
+}
+dialog.fadeout::backdrop {
+  animation: fadeout 0.2s linear forwards;
+}
+footer {
+  padding-top: 14px;
 }
 footer form {
   display:flex;
@@ -54,12 +65,11 @@ footer form {
   100% { opacity: 1; }
 }
 @keyframes fadeout {
-  0% { opacity: 0; }
-  100% {opacity: 1; }
+  0% { opacity: 1; }
+  100% {opacity: 0; }
 }
 .fadeout {
-  animation: fadeout 0.15s linear forwards;
-  animation-delay: calc(var(--index) * 100ms);
+  animation: fadeout 0.2s linear forwards;
 }
 .dialog-body {
   flex: 1;
@@ -123,10 +133,10 @@ footer form {
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.9;
+  opacity: 0.8;
   padding: 0;
   margin: 0;
-  background-color: #222222;
+  background-color: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -155,10 +165,6 @@ footer form {
   margin: 2px;
   user-select: none;
 }
-#ta {
-  font-size: 12px;
-  display: none;
-}
 .vButtons {
   display: flex;
   flex-direction: column;
@@ -169,6 +175,10 @@ footer form {
 }
 .close-button {
   display: none; 
+}
+#ta {
+  font-size: 12px;
+  display: none;
 }
 #partsUl {
   overflow-y: auto;

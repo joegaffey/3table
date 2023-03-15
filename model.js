@@ -3,6 +3,9 @@ import { OrbitControls } from 'orbitControls';
 import { STLExporter } from 'STLExporter';
 import * as parts from 'parts';
 
+// renderer.xr.enabled = true;
+// document.body.appendChild(VRButton.createButton(renderer));
+
 let groups = {};
 
 const scene = new THREE.Scene();
