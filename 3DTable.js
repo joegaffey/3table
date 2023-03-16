@@ -140,7 +140,9 @@ export function selectCellByCoord(row, col = -1, focus = false) {
 }
 
 function setTicks(count) {
-  ticksEl.innerHTML = '<span class="tick"></span>\n';
+  if(count > 50)  // Shitty hack to avoid overrunning the slider
+    count = count / 2;
+  ticksEl.innerHTML = '<span></span>\n';
   for(let i = 0; i < count; i++) {
     ticksEl.innerHTML += '<span class="tick">|</span>\n'
   }
@@ -161,9 +163,6 @@ export function toggleSnap() {
 }
 
 function setSliderRange(col) {
-  let scaled = model.size;
-  if(model.size > 3000)
-    scaled = model.size / 2;
   if(col < 5) {
     valSliderEl.max = model.size / 100;
     valSliderEl.min = 0;
@@ -181,7 +180,7 @@ function setSliderRange(col) {
     valSliderEl.min = model.size / -2;
     if(snapOn) {
       valSliderEl.step = 50;
-      setTicks(scaled / valSliderEl.step);
+      setTicks(valSliderEl.step);
     }
     else {
       valSliderEl.step = 1;
