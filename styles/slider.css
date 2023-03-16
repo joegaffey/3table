@@ -35,8 +35,9 @@ input[type="range"] {
   background: transparent;
   cursor: pointer;
   height: 32px; 
-  width: 100%;
-}
+  width: 100%; 
+}  
+
 input[type="range"]::-webkit-slider-runnable-track {
   background: var(--slider-track-bg-color);
   border-radius: 10px;
