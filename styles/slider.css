@@ -4,6 +4,7 @@
 }
 .slider {
   width: 100%;
+  user-select: none;
 }
 .slider disabled {
   width: 100%;

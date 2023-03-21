@@ -170,7 +170,6 @@ function build() {
   csvStr.split('\n').forEach(l => {
     rows.push(l.split(','));
   });
-  
   rows.forEach((row, i) => {
     try {
       if(row.length > 9) {
@@ -184,13 +183,12 @@ function build() {
         const part = parts.getPart(row[0]);
         if(part) {
           // Handle part
-          const group = getGroup(row[1]);
+          part.row = row;
           rowMap[i] = part;
           part.visible = visible;
+          const group = getGroup(row[1]);
           group.add(part);
           updatePart(part, row);
-          if(xrayOn)
-            part.material = xrayMaterial;
         }
         else {
           // Handle group
@@ -215,11 +213,17 @@ function build() {
   });
 }     
 
+export function partReady(part) {
+  updatePart(part, part.row);
+}
+
 function updatePart(part, props) {
   part.scale.set(props[2] * part.scale.x, props[3] * part.scale.y, props[4] * part.scale.z);
   part.position.set(props[5], props[6], props[7]); 
   part.rotation.set(props[8] * (Math.PI / 180), props[9] * (Math.PI / 180), props[10] * (Math.PI / 180)); 
   part.userData.scaleZ = props[4]; //Store original scale
+  if(xrayOn)
+    part.material = xrayMaterial;
 }
 
 export function setXRay(on) {

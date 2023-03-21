@@ -33,8 +33,8 @@ export const parts = {
   prism: { name: 'Prism', type: 'Modeled', geom: prismGeom, color: 0x444444, adjust: [1,1,1,0,-50,-50,0,0,90] },
   cone: { name: 'Cone', type: 'Modeled', geom: coneGeom, color: 0x444444 },
   torus: { name: 'Torus', type: 'Modeled', geom: torusGeom, color: 0x444444 },
-  8040: { name: '8040 profile', type: 'Extruded', geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
-  4040: { name: '4040 profile', type: 'Extruded', geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
+  8040: { name: '8040 profile', collection: 'profile', type: 'Extruded', geom: null, color: 0x444444, adjust: [1,1,1,-40,-20,0,0,0,0] },   //https://www.thingiverse.com/thing:4261766
+  4040: { name: '4040 profile', collection: 'profile', type: 'Extruded', geom: null, color: 0x444444, adjust: [1,1,1/1.2,0,0,0,0,0,0] },  //https://www.thingiverse.com/thing:2944815
   c4040: { name: '4040 corner', type: 'Modeled', geom: c4040Geom, color: 0x111111, accessories: [{id: 'nuts', name: 'T-Slot nuts and bolts', count: 2}] },
   c8040: { name: '8040 corner', type: 'Modeled', geom: c8040Geom, color: 0x111111, accessories: [{id: 'nuts', name: 'T-Slot nuts and bolts', count: 4}] },
 };
@@ -50,60 +50,70 @@ export const collections = {
   }
 };
 
-const baseURL = './assets/';
+const baseURL = './collections';
 
 const stlLoader = new STLLoader();
 
-function loadGeometry(name) {
+// export function preLoad(names, callback) {
+//   names.forEach(name => {
+//     const part = parts[name]
+//     if(part && !part.geom) 
+//       getGeometry(part);
+//   });
+//   if(callback)
+//     callback();
+// }
+
+function getGeometry(part) {
   stlLoader.load(
-    `${baseURL}${name}.stl`,
+    `${baseURL}/${part.collection}/${part.name}.stl`,
     (geometry) => {
-      parts[name].geom = geometry;
-      try {
-        model.rebuild();
-      }
-      catch(e) { console.log(e); }
+      parts[part.name].geom = geometry;
+      part.geometry = geometry.clone();
+      setupPart(part, true);
+      return geometry;
     },
     (xhr) => {
       console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
     },
     (error) => {
       console.log(`Error loading profile STL: ${name}`);
+      console.log(error);
     }
   );
 }
 
-export function load(callback) {
-  Object.keys(parts).forEach(model => {
-    if(parts[model].name !== 'function' && !parts[model].geom) 
-      loadGeometry(model);
-  });
-  if(callback)
-    callback();
-}
-
 export function getPart(name) {
   const part = new THREE.Mesh();
-  const model = parts[name];
+  const partModel = parts[name];
   
-  if(!model)
+  if(!partModel)
     return null;
   
   part.name = name;
+  part.collection = partModel.collection;
   
-  if(model.geom)
-    part.geometry = model.geom.clone();
+  if(!partModel.geom)
+    getGeometry(part);
+  else {
+    part.geometry = partModel.geom.clone();
+    setupPart(part, false);
+  }
+  return part;
+}
+
+function setupPart(part, notify) {
+  const partModel = parts[part.name];
+  part.material = new THREE.MeshPhongMaterial({ color: partModel.color });
   
-  part.material = new THREE.MeshPhongMaterial({ color: model.color });
-  
-  if(model.adjust) {
-    const a = model.adjust;
+  if(partModel.adjust) {
+    const a = partModel.adjust;
     part.scale.set(a[0], a[1], a[2]);
     part.geometry.translate(a[3], a[4], a[5]);
     part.geometry.rotateX(a[6] * (Math.PI / 180));
     part.geometry.rotateY(a[7] * (Math.PI / 180));
     part.geometry.rotateZ(a[8] * (Math.PI / 180));
+    if(notify)
+      model.partReady(part);
   }
-
-  return part;
 }
