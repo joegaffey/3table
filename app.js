@@ -26,12 +26,10 @@ const settingsButton = document.querySelector('#settingsButton');
 const undoButton = document.querySelector('#undoButton');
 const redoButton = document.querySelector('#redoButton');
 
-parts.load(partsLoaded);
-
 let history = []; // History is not the past but a map of the past
 let future = []; // There's no fate but what we make for ourselves
 
-function partsLoaded() {
+window.onload = () => {
   setCollectionOptions();
   setPartOptions(collectionSelectEl.value);  
 }
@@ -126,6 +124,11 @@ function downloadText(name, text) {
 
 const fileInput = document.getElementById('input-file');
 fileInput.addEventListener('change', getLocalCSVFile);
+
+document.body.addEventListener('model-ready', (e) => {
+  console.log(e)
+});
+
 
 document.getElementById('importButton').addEventListener('click', (e) => { 
   fileInput.click();
@@ -367,7 +370,7 @@ function setCSV(csv) {
 function showLoader() {
   loaderEl.classList.remove('fadeout');
   loaderEl.classList.add('fadein');
-  loaderEl.style.display = 'flex';  
+  loaderEl.style.display = 'flex';
 }
 
 function hideLoader() {
