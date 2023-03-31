@@ -191,3 +191,10 @@ footer form {
 #guiContainer{
   padding-top: 12px;
 }
+#addDialog > section {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}  
+#addDialog > section > div {
+  padding-bottom: 6px;
+}

@@ -96,27 +96,15 @@ let csvStr = null;
 
 export function fromCSV(str) {
   csvStr = str;
+  highlightedRow = -1;
   rebuild();
 }
+
+let highlightedRow = -1;
 
 export function highlightRow(index) {
+  highlightedRow = index;
   rebuild();
-  const object = rowMap[index];
-  if(!object)
-    return;
-  highlightObject(object);
-  const axesHelper = new THREE.AxesHelper(200);
-  object.add(axesHelper);
-}
-
-function highlightObject(object) {
-  if(object.type === 'Mesh') 
-    object.material = selectedMaterial;
-  else if(object.type === 'Object3D') {
-    object.children.forEach(child => {
-      highlightObject(child);
-    });
-  }
 }
 
 export function rebuild() {
@@ -165,63 +153,98 @@ export function getAllMeshInstances() {
 
 function build() {
   const rows = [];
+  
   if(!csvStr)
     return;
+  
   csvStr.split('\n').forEach(l => {
     rows.push(l.split(','));
   });
-  rows.forEach((row, i) => {
-    try {
-      if(row.length > 9) {
-        row = row.map(str => str.trim());
-        
-        let visible = true;
-        if(row[0].startsWith('#')) {
-          row[0] = row[0].slice(1);  
-          visible = false;
-        }
-        const part = parts.getPart(row[0]);
-        if(part) {
-          // Handle part
-          part.row = row;
-          rowMap[i] = part;
-          part.visible = visible;
-          const group = getGroup(row[1]);
-          group.add(part);
-          updatePart(part, row);
-        }
-        else {
-          // Handle group
-          const group = getGroup(row[0]);
-          rowMap[i] = group;
-          const parent = getGroup(row[1]);
-          if(group !== parent) {
-            group.parent = parent;
-            group.visible = visible;
-            parent.add(group);
-            updatePart(group, row);
-          }
-        }
-      }    
-    }
-    catch(e) { console.log(e); };
+  
+  let names = [];
+  rows.forEach(row => {
+    names.push(row[0]);
   });
-  Object.keys(groups).forEach(g => {
-    if(!groups[g].parent) {
-      scene.add(groups[g]);
-    }
-  });
-}     
+  names = [...new Set(names)];
+  
+  Promise.all(parts.loadGeometries(names)).then(() => {
+    rows.forEach((row, i) => {
+      try {
+        if(row.length > 9) {
+          row = row.map(str => str.trim());
 
-export function partReady(part) {
-  updatePart(part, part.row);
+          let visible = true;
+          if(row[0].startsWith('#')) {
+            row[0] = row[0].slice(1);
+            visible = false;
+          }
+
+          const part = parts.getPart(row[0]);
+
+          if(part) {
+            // Handle part
+            part.row = row;
+            rowMap[i] = part;
+            part.visible = visible;
+            const group = getGroup(row[1]);
+            group.add(part);
+            updatePart(part, row);
+          }
+          else {
+            // Handle group
+            const group = getGroup(row[0]);
+            rowMap[i] = group;
+            const parent = getGroup(row[1]);
+            if(group !== parent) {
+              group.parent = parent;
+              group.visible = visible;
+              parent.add(group);
+              updatePart(group, row);
+            }
+          }
+        }    
+      }
+      catch(e) { console.log(e); };
+    });
+
+    Object.keys(groups).forEach(g => {
+      if(!groups[g].parent) {
+        scene.add(groups[g]);
+      }
+    });
+    
+    if(highlightedRow > -1) {
+      highlightedObjects = [];
+      getHighlightedObjects(rowMap[highlightedRow]);
+      const axesHelper = new THREE.AxesHelper(200);
+      rowMap[highlightedRow].add(axesHelper);
+      rowMap[highlightedRow].material = selectedMaterial;
+      highlightedObjects.forEach(object => {
+        object.material = selectedMaterial;
+      });
+    }
+  });
 }
 
+let highlightedObjects = [];
+function getHighlightedObjects(object) {
+  if(object.type === 'Mesh')
+    highlightedObjects.push(object);
+  else if(object.type === 'Object3D') {
+    object.children.forEach(child => {
+      getHighlightedObjects(child);
+    });
+  }
+}
+
+
 function updatePart(part, props) {
-  part.scale.set(props[2] * part.scale.x, props[3] * part.scale.y, props[4] * part.scale.z);
-  part.position.set(props[5], props[6], props[7]); 
-  part.rotation.set(props[8] * (Math.PI / 180), props[9] * (Math.PI / 180), props[10] * (Math.PI / 180)); 
-  part.userData.scaleZ = props[4]; //Store original scale
+  if(props) {
+    part.scale.set(props[2] * part.scale.x, props[3] * part.scale.y, props[4] * part.scale.z);
+    part.position.set(props[5], props[6], props[7]); 
+    part.rotation.set(props[8] * (Math.PI / 180), props[9] * (Math.PI / 180), props[10] * (Math.PI / 180)); 
+    part.userData.scaleZ = props[4]; //Store original scale
+  }
   if(xrayOn)
     part.material = xrayMaterial;
 }
@@ -230,9 +253,6 @@ export function setXRay(on) {
   xrayOn = on;
   rebuild();
 }
-
-const raycaster = new THREE.Raycaster();
-export const pointer = new THREE.Vector2();
 
 renderer.domElement.addEventListener('click', () => {
   rebuild();
@@ -253,6 +273,9 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+// const raycaster = new THREE.Raycaster();
+// export const pointer = new THREE.Vector2();
+//
 // function updateRaycaster() {
 //   raycaster.setFromCamera(pointer, camera);
 //   let intersects = raycaster.intersectObjects(scene.children, false);
