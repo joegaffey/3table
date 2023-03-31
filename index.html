@@ -18,14 +18,12 @@
           "parts": "./parts.js",
           "model": "./model.js",
           "3DTable": "./3DTable.js",
-          "CSVTextArea": "./CSVTextArea.js",
-          "gui": "./gui.js",
-          "app": "./app.js"
+          "CSVTextArea": "./CSVTextArea.js"
         }
       }
     </script>    
-    <script async type="text/javascript" src="./lib/dat.gui.min.js"></script>
     <script async type="module" src="./app.js"></script>
+    <script async type="text/javascript" src="./lib/dat.gui.min.js"></script>
     <script async type="module" src="./gui.js"></script>
   </head>
   <body>
@@ -170,18 +168,18 @@
   
     <dialog id="addDialog">
       <header><h3>Add Part</h3></header>
-      <p>
-        Select collection<br/>
+      <section>
+        <div>Select collection</div>
         <select name="collectionSelect" id="collection-select" style="width: 100%"></select>
-      </p>
-      <p>
-        Select part<br/>
+      </section>
+      <section>
+        <div>Select part</div>
         <select name="partSelect" id="part-select" style="width: 100%"></select>
-      </p>
-      <p>
-        Select parent<br/>
+      </section>
+      <section>
+        <div>Select group</div>
         <select name="parentSelect" id="parent-select" style="width: 100%"></select>
-      </p>
+      </section>
 <!--       <p>
         Or add a new parent<br/>
         <input name="parentInput" id="parent-input" style="width: 100%">

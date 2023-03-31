@@ -54,55 +54,36 @@ const baseURL = './collections';
 
 const stlLoader = new STLLoader();
 
-// export function preLoad(names, callback) {
-//   names.forEach(name => {
-//     const part = parts[name]
-//     if(part && !part.geom) 
-//       getGeometry(part);
-//   });
-//   if(callback)
-//     callback();
-// }
-
-function getGeometry(part) {
-  stlLoader.load(
-    `${baseURL}/${part.collection}/${part.name}.stl`,
-    (geometry) => {
-      parts[part.name].geom = geometry;
-      part.geometry = geometry.clone();
-      setupPart(part, true);
-      return geometry;
-    },
-    (xhr) => {
-      console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-    },
-    (error) => {
-      console.log(`Error loading profile STL: ${name}`);
-      console.log(error);
+export function loadGeometries(names) {
+  const promises = [];
+  names.forEach(name => {
+    const partModel = parts[name];
+    if(partModel && !partModel.geom) {
+      const promise = stlLoader.loadAsync(`${baseURL}/${partModel.collection}/${name}.stl`);
+      Promise.resolve(promise).then(geometry => {
+        partModel.geom = geometry;
+      });
+      promises.push(promise);
     }
-  );
+  });
+  return promises;
 }
 
 export function getPart(name) {
-  const part = new THREE.Mesh();
   const partModel = parts[name];
   
   if(!partModel)
     return null;
   
+  const part = new THREE.Mesh(); 
   part.name = name;
   part.collection = partModel.collection;
-  
-  if(!partModel.geom)
-    getGeometry(part);
-  else {
-    part.geometry = partModel.geom.clone();
-    setupPart(part, false);
-  }
+  part.geometry = partModel.geom.clone();
+  setupPart(part);
   return part;
 }
 
-function setupPart(part, notify) {
+function setupPart(part) {
   const partModel = parts[part.name];
   part.material = new THREE.MeshPhongMaterial({ color: partModel.color });
   
@@ -113,7 +94,5 @@ function setupPart(part, notify) {
     part.geometry.rotateX(a[6] * (Math.PI / 180));
     part.geometry.rotateY(a[7] * (Math.PI / 180));
     part.geometry.rotateZ(a[8] * (Math.PI / 180));
-    if(notify)
-      model.partReady(part);
   }
 }
