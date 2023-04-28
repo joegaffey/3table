@@ -35,6 +35,6 @@ camPosGUI.add(model.camera.position, 'y', -2500, 2500).name('Y').listen();
 camPosGUI.add(model.camera.position, 'z', -2500, 2500).name('Z').listen();
 
 const camRotGUI = camGUI.addFolder('Rotation');
-camRotGUI.add(model.camera.rotation, 'x', -Math.PI, Math.PI).name('Z').listen();
+camRotGUI.add(model.camera.rotation, 'x', -Math.PI, Math.PI).name('X').listen();
 camRotGUI.add(model.camera.rotation, 'y', -Math.PI, Math.PI).name('Y').listen();
 camRotGUI.add(model.camera.rotation, 'z', -Math.PI, Math.PI).name('Z').listen();
