@@ -167,7 +167,7 @@ footer form {
   padding-bottom: 4px;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: none;
   margin: 2px;
 }
 .app-buttons > * {
