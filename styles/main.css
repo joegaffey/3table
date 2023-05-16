@@ -19,6 +19,8 @@ h4 {
 textarea {
   resize: none;
   overflow: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 dialog {
   display: flex;
@@ -85,6 +87,7 @@ footer form {
 }
 .editor {
   display: none;
+  width: 100%;
 }
 .table-controls {
   padding-top: 4px;
