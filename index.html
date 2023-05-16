@@ -46,66 +46,71 @@
         <button id="settingsButton" class="img-btn">
           <img src="./icons/gear.svg" alt="Settings">
         </button>
+        <button id="toggleEditorButton" class="img-btn right">
+          <img id="toggleEditorImg" src="./icons/add.svg" alt="Toggle editor">
+        </button>
       </div>
-      <table class="spec-table">
-        <thead>
-          <tr class="top-thead">
-            <th></th>
-            <th></th>
-            <th colspan="3">Scale</th>
-            <th colspan="3">Position</th>
-            <th colspan="3">Rotation</th>
-          </tr>
-          <tr class="bottom-thead">
-            <th>Part</th>
-            <th>Group</th>
-            <th>X</th>
-            <th>Y</th>
-            <th>Z</th>
-            <th>X</th>
-            <th>Y</th>
-            <th>Z</th>
-            <th>X</th>
-            <th>Y</th>
-            <th>Z</th>
-          </tr>
-        </thead>
-        <tbody class="spec-table-body"></tbody>
-      </table>
-      <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
-      <div class="table-controls">
-        <button id="addButton" class="img-btn">
-          <img src="./icons/add.svg" alt="Add part">
-        </button>
-        <button id="deleteButton" class="img-btn">
-          <img src="./icons/delete.svg" alt="Delete part">
-        </button>
-        <button id="copyButton" class="img-btn">
-          <img src="./icons/copy.svg" alt="Copy part">
-        </button>
-        <button id="snapButton" class="img-btn">
-          <img src="./icons/snap.svg" alt="Snap"> 
-        </button>
-        <button id="undoButton" class="img-btn" disabled>
-          <img src="./icons/undo.svg" alt="Undo">
-        </button>
-        <button id="redoButton" class="img-btn" disabled>
-          <img src="./icons/redo.svg" alt="Redo"> 
-        </button> 
-        <!--    
-        <span class="snap">0</span>
-        <button id="upButton" class="img-btn">
-          <img src="./icons/up.svg" alt="Move part up">
-        </button>
-        <button id="downButton" class="img-btn">
-          <img src="./icons/down.svg" alt="Move part down">
-        </button> 
-        -->
-      </div>
-      <div class="slider">
-        <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
-        <div class="ticks" style="opacity:0.2;"></div>
-      </div>
+      <div class="editor">
+        <table class="spec-table">
+          <thead>
+            <tr class="top-thead">
+              <th></th>
+              <th></th>
+              <th colspan="3">Scale</th>
+              <th colspan="3">Position</th>
+              <th colspan="3">Rotation</th>
+            </tr>
+            <tr class="bottom-thead">
+              <th>Part</th>
+              <th>Group</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+            </tr>
+          </thead>
+          <tbody class="spec-table-body"></tbody>
+        </table>
+        <textarea wrap="off" id="ta" rows="10" cols="50">Loading...</textarea>
+        <div class="table-controls">
+          <button id="addButton" class="img-btn">
+            <img src="./icons/add.svg" alt="Add part">
+          </button>
+          <button id="deleteButton" class="img-btn">
+            <img src="./icons/delete.svg" alt="Delete part">
+          </button>
+          <button id="copyButton" class="img-btn">
+            <img src="./icons/copy.svg" alt="Copy part">
+          </button>
+          <button id="snapButton" class="img-btn">
+            <img src="./icons/snap.svg" alt="Snap"> 
+          </button>
+          <button id="undoButton" class="img-btn" disabled>
+            <img src="./icons/undo.svg" alt="Undo">
+          </button>
+          <button id="redoButton" class="img-btn" disabled>
+            <img src="./icons/redo.svg" alt="Redo"> 
+          </button> 
+          <!--    
+          <span class="snap">0</span>
+          <button id="upButton" class="img-btn">
+            <img src="./icons/up.svg" alt="Move part up">
+          </button>
+          <button id="downButton" class="img-btn">
+            <img src="./icons/down.svg" alt="Move part down">
+          </button> 
+          -->
+        </div>
+        <div class="slider">
+          <input class="val-slider" type="range" value="0" min="-1000" max="1000" disabled/>
+          <div class="ticks" style="opacity:0.2;"></div>
+        </div>
+      </div>      
     </div>
        
     <dialog id="helpDialog">
