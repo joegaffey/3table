@@ -6,6 +6,8 @@ import * as parts from 'parts';
 import csvTA from 'CSVTextArea';
 
 const loaderEl = document.querySelector('.loader');
+const editorEl = document.querySelector('.editor');
+
 
 const plDialog = document.querySelector('#plDialog');
 const helpDialog = document.querySelector('#helpDialog');
@@ -22,6 +24,8 @@ const plTextEl = document.querySelector('#plText');
 
 const csvButton = document.getElementById('csvButton');
 const settingsButton = document.querySelector('#settingsButton');
+const toggleEditorButton = document.querySelector('#toggleEditorButton');
+const toggleEditorImg = document.querySelector('#toggleEditorImg');
 
 const undoButton = document.querySelector('#undoButton');
 const redoButton = document.querySelector('#redoButton');
@@ -155,6 +159,17 @@ csvButton.addEventListener('click', (e) => {
     csvButton.innerText = 'Table';
     table.hide();
     csvTA.style.display = 'block';
+  }
+}, false);
+
+toggleEditorButton.addEventListener('click', (e) => { 
+  if(editorEl.style.display === 'block') {
+    editorEl.style.display = 'none';
+    toggleEditorImg.src = "./icons/add.svg";
+  }
+  else {
+    editorEl.style.display = 'block';
+    toggleEditorImg.src = "./icons/minus.svg";
   }
 }, false);
 

@@ -77,8 +77,14 @@ footer form {
 .hide {
   display: none;
 }
+.img-btn.right {
+  margin-left: auto;
+}
 .snap {
   color: rgb(180, 180, 180);
+}
+.editor {
+  display: none;
 }
 .table-controls {
   padding-top: 4px;
