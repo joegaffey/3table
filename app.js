@@ -165,11 +165,11 @@ csvButton.addEventListener('click', (e) => {
 toggleEditorButton.addEventListener('click', (e) => { 
   if(editorEl.style.display === 'block') {
     editorEl.style.display = 'none';
-    toggleEditorImg.src = "./icons/add.svg";
+    toggleEditorImg.src = "./icons/open.svg";
   }
   else {
     editorEl.style.display = 'block';
-    toggleEditorImg.src = "./icons/minus.svg";
+    toggleEditorImg.src = "./icons/close.svg";
   }
 }, false);
 
