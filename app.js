@@ -82,9 +82,20 @@ if(window.location.hash) {
   const param = window.location.hash.split('=');
   if(param[0] === '#model')
     setModel(param[1]);
+  else if(param[0] === '#url')
+    getExternalModel(param[1]);
 }
 else 
   getCSVFile(modelSelectEl.value);
+
+function getExternalModel(url) {  
+  fetch(url)
+    .then((response) => response.text())
+    .then((text) => {
+      update3dData(text, null);
+      hideLoader();
+    });
+}
   
 function setModel(model) {
   modelSelectEl.value = model + '.csv';
