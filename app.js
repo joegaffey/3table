@@ -160,6 +160,10 @@ csvButton.addEventListener('click', (e) => {
     table.hide();
     csvTA.style.display = 'block';
   }
+  if(editorEl.style.display !== 'block') {
+    editorEl.style.display = 'block';
+    toggleEditorImg.src = "./icons/close.svg";
+  }
 }, false);
 
 toggleEditorButton.addEventListener('click', (e) => { 
