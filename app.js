@@ -36,7 +36,7 @@ let future = []; // There's no fate but what we make for ourselves
 
 window.onload = () => {
   setCollectionOptions();
-  setPartOptions(collectionSelectEl.value);  
+  setPartOptions(collectionSelectEl.value);
 }
 
 function setCollectionOptions() {
@@ -225,6 +225,8 @@ document.querySelector('#helpButton').addEventListener('click', (event) => {
 });
 
 document.querySelector('#expButton').addEventListener('click', (event) => {
+  setCollectionOptions();
+  setPartOptions(collectionSelectEl.value);
   exportDialog.showModal();
 });
 
