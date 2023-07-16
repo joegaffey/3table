@@ -133,6 +133,20 @@
         </form>
       </footer>
     </dialog>
+    
+    <dialog id="messageDialog">
+      <header>
+        <h3>Info</h3>
+      </header>
+      <section class="dialog-body">
+        <p>Message</p>
+      </section>
+      <footer>
+        <form method="dialog">
+          <button class="ui-btn green">Close</button>
+        </form>
+      </footer>
+    </dialog>
   
     <dialog id="plDialog">
       <header>
@@ -158,6 +172,8 @@
         <div class="vButtons">
           <button class="ui-btn blue" id="importButton">CSV File</button>
           <input type="file" id="input-file" accept=".csv" hidden>
+          <button class="ui-btn blue" id="importPartButton">Part File (Binary STL)</button>
+          <input type="file" id="input-part-file" accept=".stl" hidden>
         </div>
         <h4>Export</h4>
         <div class="vButtons">
