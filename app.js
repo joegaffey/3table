@@ -14,6 +14,7 @@ const helpDialog = document.querySelector('#helpDialog');
 const exportDialog = document.querySelector('#exportDialog');
 const addDialog = document.querySelector('#addDialog');
 const settingsDialog = document.querySelector('#settingsDialog');
+const messageDialog = document.querySelector('#messageDialog');
 
 const partsHelpEl = document.querySelector('#partsUl');
 const modelSelectEl = document.querySelector('#model-select');
@@ -137,16 +138,24 @@ function downloadText(name, text) {
   hiddenElement.click();
 }
 
-const fileInput = document.getElementById('input-file');
-fileInput.addEventListener('change', getLocalCSVFile);
 
-document.body.addEventListener('model-ready', (e) => {
-  console.log(e)
-});
+// document.body.addEventListener('model-ready', (e) => {
+//   console.log(e);
+// });
 
+
+const csvFileInput = document.getElementById('input-file');
+csvFileInput.addEventListener('change', getLocalCSVFile);
 
 document.getElementById('importButton').addEventListener('click', (e) => { 
-  fileInput.click();
+  csvFileInput.click();
+}, false);
+
+const stlFileInput = document.getElementById('input-part-file');
+stlFileInput.addEventListener('change', getLocalSTLFile);
+
+document.getElementById('importPartButton').addEventListener('click', (e) => { 
+  stlFileInput.click();
 }, false);
 
 csvButton.addEventListener('click', (e) => { 
@@ -196,6 +205,17 @@ function readFileContent(file) {
 }
 
 let loadingCount = 0;
+
+function getLocalSTLFile(event) {
+	const input = event.target;
+  if ('files' in input && input.files.length > 0) {
+    parts.loadFromFile(input.files[0], (part) => {
+      exportDialog.close();
+      // alert(part.name + ' added to parts list.');
+      showMessage('Info', part.name + ' added to parts list.');
+    });
+  }
+}
 
 // const urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
 
@@ -396,6 +416,12 @@ function setCSV(csv) {
   table.fromCSV(csv);
   csvTA.value = csv;
 }
+
+function showMessage(type, message) {
+  messageDialog.querySelector('h3').innerText = type;
+  messageDialog.querySelector('p').innerText = message;
+  messageDialog.showModal();
+} 
 
 function showLoader() {
   loaderEl.classList.remove('fadeout');

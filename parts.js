@@ -47,6 +47,10 @@ export const collections = {
   profile: {
     name: 'Extruded Profile',
     parts: ['8040','4040','c8040','c4040']
+  },
+  imported: {
+    name: 'Imported',
+    parts: []
   }
 };
 
@@ -67,6 +71,32 @@ export function loadGeometries(names) {
     }
   });
   return promises;
+}
+
+export function loadFromFile(file, callback) {
+  // console.log(file);
+  const part = {};
+  part.name = file.name;
+  part.collection = 'imported';
+  part.type = 'Imported';
+  part.color = 0x228822;
+  
+  const id = Date.now();
+  parts[id] = part;
+  collections.imported.parts.push(id);
+  
+  var reader = new FileReader();
+  reader.onload = function () {    
+    try {
+      part.geom = stlLoader.parse(this.result);
+    }
+    catch(e) {
+      alert('Error parsing ' + part.name + '.\nFile must be valid STL binary format.');
+    }
+    callback(part);
+  }; 
+  // reader.readAsText(file);
+  reader.readAsBinaryString(file);
 }
 
 export function getPart(name) {
