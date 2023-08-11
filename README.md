@@ -6,7 +6,7 @@ Check it out [here](https://3table.glitch.me/)!
 
 Link your own model via the "url" parameter e.g.
 
-[https://3table.glitch.me/#url=https://example.com/my_model.csv](https://3table.glitch.me/#url=https://gist.githubusercontent.com/joegaffey/aacfd2438b83411e38bdff322aeeac72/raw/958e71de02b2c9eedada7d330a2c3269f55a4841/profile_cube.csv)
+[https://3table.glitch.me/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv](https://3table.glitch.me/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv)
 
 ## How to make your 3D model
 
