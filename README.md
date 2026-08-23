@@ -2,11 +2,11 @@
 
 Tabular design for 3D.
 
-Check it out [here](https://3table.glitch.me/)!
+Check it out [here](https://joegaffey.com/3table/)!
 
 Link your own model via the "url" parameter e.g.
 
-[https://3table.glitch.me/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv](https://3table.glitch.me/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv)
+[https://joegaffey.com/3table/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv](https://joegaffey.com/3table/#url=https://raw.githubusercontent.com/joegaffey/3table/main/models/blocks.csv)
 
 ## How to make your 3D model
 
